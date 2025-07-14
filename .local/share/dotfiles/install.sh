@@ -16,7 +16,7 @@ checkout_result=$(dotfiles checkout 2>&1)
 if [ $? -eq 0 ]; then
 	echo "Added dotfiles to home directory"
 else
-        BACKUPS=$(echo "$checkout_result" | grep -E "\s+[\.|README|LICENSE]" | awk '{print $1}')
+        BACKUPS=$(echo "$checkout_result" | grep -E "^\s+[\.|README|LICENSE]" | awk '{print $1}')
         echo "Backing up these dotfiles in $BACKUP_DIR:"
         echo "$BACKUPS"
         for line in $BACKUPS; do mkdir -p "$(dirname "${BACKUP_DIR}/${line}")"; done
