@@ -1,0 +1,25 @@
+# This file is only necessary if you're actually using this as a bare repo. Ignore everything by default to make sure we can tab complete "git add <FILE>" without it being overwhelmed
+/*
+# permit everything else
+
+# specific config files
+!/.config/
+/.config/*
+!/.config/mpd/
+!/.config/nvim
+!/.config/python/
+!/.config/zathura/
+
+# personal scripts
+!/.local/
+/.local/*
+!/.local/bin/
+!/.local/share/
+/.local/share/*
+!/.local/share/applications/
+!/.local/share/dotfiles/
+
+# repo root
+!/.gitignore
+!/README.md
+!/LICENSE

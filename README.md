@@ -1,5 +1,7 @@
 # dotfiles
 
+My personal dotfile repo. I don't accept issues/PRs but you're welcome to use these yourself.
+
 ## management
 
 I personally manage these with the [Git bare repository](https://www.atlassian.com/git/tutorials/dotfiles) approach, and there's a couple of scripts/aliases which assume this management approach.
