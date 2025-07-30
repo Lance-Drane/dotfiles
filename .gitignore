@@ -5,8 +5,9 @@
 # specific config files
 !/.config/
 /.config/*
+!/.config/kitty/
 !/.config/mpd/
-!/.config/nvim
+!/.config/nvim/
 !/.config/python/
 !/.config/zathura/
 
