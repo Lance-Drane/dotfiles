@@ -1,0 +1,8 @@
+# disallow spaces and '&' in generated filenames
+--restrict-filenames
+# keep going when downloading a playlist when errors are encountered
+--ignore-errors
+--continue
+# sanity check
+--no-overwrites
+

@@ -7,9 +7,11 @@
 /.config/*
 !/.config/kitty/
 !/.config/mpd/
+!/.config/mpv/
 !/.config/nvim/
 !/.config/python/
 !/.config/rmpc/
+!/.config/yt-dlp/
 !/.config/zathura/
 
 # personal scripts
