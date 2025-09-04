@@ -6,6 +6,7 @@
 !/.config/
 /.config/*
 !/.config/kitty/
+!/.config/lazygit/
 !/.config/mpd/
 !/.config/mpv/
 !/.config/nvim/
