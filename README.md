@@ -15,6 +15,6 @@ NOTE: the script will overwrite files which already exist on your computer, and 
 
 ## Required fonts
 
-- patched `0xProto Nerd Font` for the monospace font
+- patched `0xProto Nerd Font` for the monospace font and icons
 - `Libertinus` for the default serif / sans-serif / math font
-- `Noto Color Emoji` and `FontAwesome` to ensure emojis/icons display on serif / sans-serif fonts
+- `Noto Color Emoji` to ensure emojis display
