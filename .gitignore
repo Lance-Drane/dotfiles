@@ -5,6 +5,7 @@
 # specific config files
 !/.config/
 /.config/*
+!/.config/fontconfig/
 !/.config/kitty/
 !/.config/lazygit/
 !/.config/mpd/

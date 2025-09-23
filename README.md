@@ -12,3 +12,9 @@ I personally manage these with the [Git bare repository](https://www.atlassian.c
 2. Run `curl -fsSL https://raw.githubusercontent.com/Lance-Drane/dotfiles/refs/heads/master/.local/share/dotfiles/install.sh | sh`
 
 NOTE: the script will overwrite files which already exist on your computer, and place them in "$HOME/.dotfiles-backup"
+
+## Required fonts
+
+- patched `0xProto Nerd Font` for the monospace font
+- `Libertinus` for the default serif / sans-serif / math font
+- `Noto Color Emoji` and `FontAwesome` to ensure emojis/icons display on serif / sans-serif fonts
