@@ -16,7 +16,10 @@
 !/.config/yt-dlp/
 !/.config/zathura/
 
-# personal scripts
+# personal scripts are stored here, .local/bin/ is for installed scripts
+!/bin
+
+# permit ~/.local/share/applications (XDG spec) and ~/.local/share/dotfiles (miscellaneous )
 !/.local/
 /.local/*
 !/.local/bin/
