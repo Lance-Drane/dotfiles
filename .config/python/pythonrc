@@ -53,14 +53,17 @@ enabled however it does not do pathname completion
 
 # Fix for Issue #5
 # - Exit if being called from within ipython
-try:
-    import sys
+import sys
 
+try:
     __IPYTHON__ and sys.exit(0)
 except NameError:
     pass
 
+import ast
+import asyncio
 import atexit
+import concurrent
 import glob
 import importlib
 import inspect
@@ -74,6 +77,8 @@ import rlcompleter
 import shlex
 import signal
 import subprocess
+import threading
+import warnings
 import webbrowser
 
 from code import InteractiveConsole
@@ -82,7 +87,7 @@ from itertools import chain
 from operator import attrgetter
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from types import SimpleNamespace
+from types import FunctionType, SimpleNamespace
 
 __version__ = "0.9.0"
 
@@ -94,7 +99,7 @@ config = SimpleNamespace(
     ),
     HISTSIZE=-1,
     EDITOR=os.getenv("EDITOR", "vi"),
-    SHELL=os.getenv("SHELL", "/bin/bash"),
+    SHELL=os.getenv("SHELL", "/bin/sh"),
     EDIT_CMD=r"\e",
     SH_EXEC="!",
     DOC_CMD="?",
@@ -115,6 +120,7 @@ config = SimpleNamespace(
     POST_EDIT_PRINT_COMMENTS=True,
     # - Attempt to auto-import top-level module names on NameError
     ENABLE_AUTO_IMPORTS=True,
+    TOGGLE_ASYNCIO_LOOP_CMD=r"\A",
 )
 
 # make sure HISTFILE exists so that the readline functions don't throw FileNotFound exceptions
@@ -252,6 +258,16 @@ class ImprovedCompleter(rlcompleter.Completer):
             return None
 
 
+def _doc_to_usage(method):
+    def inner(self, arg):
+        arg = arg.strip()
+        if arg.startswith(("-h", "--help")):
+            return self.writeline(blue(method.__doc__.strip()))
+        return method(self, arg)
+
+    return inner
+
+
 class ImprovedConsole(InteractiveConsole):
     """
     Welcome to lonetwin's pimped up python prompt
@@ -295,7 +311,9 @@ class ImprovedConsole(InteractiveConsole):
         self.session_history = []  # This holds the last executed statements
         self.buffer = []  # This holds the statement to be executed
         self._indent = ""
+        self.loop = None
         super(ImprovedConsole, self).__init__(*args, **kwargs)
+
         self.init_color_functions()
         self.init_readline()
         self.init_prompt()
@@ -307,6 +325,7 @@ class ImprovedConsole(InteractiveConsole):
             config.SH_EXEC: self.process_sh_cmd,
             config.HELP_CMD: self.process_help_cmd,
             config.TOGGLE_AUTO_INDENT_CMD: self.toggle_auto_indent,
+            config.TOGGLE_ASYNCIO_LOOP_CMD: self.toggle_asyncio,
         }
         # - regex to identify and extract commands and their arguments
         self.commands_re = re.compile(
@@ -314,15 +333,6 @@ class ImprovedConsole(InteractiveConsole):
                 "|".join(re.escape(cmd) for cmd in self.commands)
             )
         )
-
-    def _doc_to_usage(method):
-        def inner(self, arg):
-            arg = arg.strip()
-            if arg.startswith(("-h", "--help")):
-                return self.writeline(blue(method.__doc__.strip()))
-            return method(self, arg)
-
-        return inner
 
     def init_color_functions(self):
         """Populates globals dict with some helper functions for colorizing text"""
@@ -394,14 +404,14 @@ class ImprovedConsole(InteractiveConsole):
         self.completer = ImprovedCompleter(self.locals)
         readline.set_completer(self.completer.complete)
 
-    def init_prompt(self):
+    def init_prompt(self, nested=False):
         """Activates color on the prompt based on python version.
 
         Also adds the hosts IP if running on a remote host over a
         ssh connection.
         """
         prompt_color = green if sys.version_info.major == 2 else yellow
-        sys.ps1 = prompt_color(">>> ", readline_workaround=True)
+        sys.ps1 = prompt_color(">=> " if nested else ">>> ", readline_workaround=True)
         sys.ps2 = red("... ", readline_workaround=True)
         # - if we are over a remote connection, modify the ps1
         if os.getenv("SSH_CONNECTION"):
@@ -437,6 +447,89 @@ class ImprovedConsole(InteractiveConsole):
             self.locals["_"] = value
 
         sys.displayhook = pprint_callback
+
+    def _init_nested_repl(self):
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.compile.compiler.flags |= ast.PyCF_ALLOW_TOP_LEVEL_AWAIT
+        self.locals["asyncio"] = asyncio
+        self.locals["repl_future"] = None
+        self.locals["repl_future_interrupted"] = False
+        self.runcode = self.runcode_async
+
+        def repl_thread():
+            try:
+                self.init_prompt(nested=True)
+                self.interact(
+                    banner=(
+                        "An asyncio loop has been started in the main thread.\n"
+                        "This nested interpreter is now running in a separate thread.\n"
+                        f"Use {config.TOGGLE_ASYNCIO_LOOP_CMD} to stop the asyncio loop "
+                        "and simply exit this nested interpreter to stop this thread\n"
+                    ),
+                    exitmsg="exiting nested REPL...\n",
+                )
+            finally:
+                warnings.filterwarnings(
+                    "ignore",
+                    message=r"^coroutine .* was never awaited$",
+                    category=RuntimeWarning,
+                )
+                if self.loop and self.loop.is_running():
+                    self.loop.call_soon_threadsafe(self._stop_asyncio_loop)
+
+                self.init_prompt()
+
+        self.repl_thread = threading.Thread(target=repl_thread)
+        self.repl_thread.start()
+
+    def _start_asyncio_loop(self):
+        self.locals["repl_future"] = None
+        self.locals["repl_future_interrupted"] = False
+        self.runcode = self.runcode_async
+
+        while self.loop is not None:
+            try:
+                self.loop.run_forever()
+            except KeyboardInterrupt:
+                if (
+                    repl_future := self.locals["repl_future"]
+                ) and not repl_future.done():
+                    repl_future.cancel()
+                    self.locals["repl_future_interrupted"] = True
+
+    def _stop_asyncio_loop(self):
+        self.loop.stop()
+        del self.locals["repl_future"]
+        del self.locals["repl_future_interrupted"]
+        self.runcode = self.runcode_sync
+        self.loop = None
+        self.writeline(
+            grey(
+                "Stopped the asyncio loop. "
+                f"Use {config.TOGGLE_ASYNCIO_LOOP_CMD} to restart it."
+            )
+        )
+
+    @_doc_to_usage
+    def toggle_asyncio(self, _):
+        """{config.TOGGLE_ASYNCIO_LOOP_CMD} - Starts/stops the asyncio loop
+
+        Configures the interpreter in a similar manner to `python -m asyncio`
+        """
+        if self.loop is None:
+            self._init_nested_repl()
+            self._start_asyncio_loop()
+        elif not self.loop.is_running():
+            self.writeline(grey("Restarting previously stopped asyncio loop"))
+            self._start_asyncio_loop()
+        else:
+            if (
+                repl_future := self.locals.get("repl_future", None)
+            ) and not repl_future.done():
+                repl_future.cancel()
+
+            self.loop.call_soon_threadsafe(self._stop_asyncio_loop)
 
     def auto_indent_hook(self):
         """Hook called by readline between printing the prompt and
@@ -522,7 +615,47 @@ class ImprovedConsole(InteractiveConsole):
             self._indent = ""
         return more
 
-    def runcode(self, code):
+    def runcode_async(self, code):
+        future = concurrent.futures.Future()
+
+        def callback():
+            self.locals["repl_future"] = None
+            self.locals["repl_future_interrupted"] = False
+
+            func = FunctionType(code, self.locals)
+            try:
+                coro = func()
+            except SystemExit:
+                raise
+            except BaseException as ex:
+                if isinstance(ex, KeyboardInterrupt):
+                    self.locals["repl_future_interrupted"] = True
+                future.set_exception(ex)
+                return
+
+            if not inspect.iscoroutine(coro):
+                future.set_result(coro)
+                return
+
+            try:
+                self.locals["repl_future"] = self.loop.create_task(coro)
+                asyncio.futures._chain_future(self.locals["repl_future"], future)
+            except BaseException as exc:
+                future.set_exception(exc)
+
+        self.loop.call_soon_threadsafe(callback)
+
+        try:
+            return future.result()
+        except SystemExit:
+            raise
+        except BaseException:
+            if self.locals["repl_future_interrupted"]:
+                self.write("\nKeyboardInterrupt\n")
+            else:
+                self.showtraceback()
+
+    def runcode_sync(self, code):
         """Wrapper around super().runcode() to enable auto-importing"""
 
         if not config.ENABLE_AUTO_IMPORTS:
@@ -543,6 +676,8 @@ class ImprovedConsole(InteractiveConsole):
             raise
         except Exception:
             self.showtraceback()
+
+    runcode = runcode_sync
 
     def write(self, data):
         """Write out data to stderr"""
@@ -777,7 +912,7 @@ class ImprovedConsole(InteractiveConsole):
         else:
             print(cyan(self.__doc__).format(**config.__dict__))
 
-    def interact(self):
+    def interact(self, banner=None, exitmsg=None):
         """A forgiving wrapper around InteractiveConsole.interact()"""
         venv_rc_done = cyan("(no venv rc found)")
         try:
@@ -789,16 +924,17 @@ class ImprovedConsole(InteractiveConsole):
         except IOError:
             pass
 
-        banner = (
-            f"Welcome to the ImprovedConsole (version {__version__})\n"
-            f"Type in {config.HELP_CMD} for list of features.\n"
-            f"{venv_rc_done}"
-        )
+        if banner is None:
+            banner = (
+                f"Welcome to the ImprovedConsole (version {__version__})\n"
+                f"Type in {config.HELP_CMD} for list of features.\n"
+                f"{venv_rc_done}"
+            )
 
         retries = 2
         while retries:
             try:
-                super(ImprovedConsole, self).interact(banner=banner)
+                super(ImprovedConsole, self).interact(banner=banner, exitmsg=exitmsg)
             except SystemExit:
                 # Fixes #2: exit when 'quit()' invoked
                 break
@@ -827,7 +963,8 @@ class ImprovedConsole(InteractiveConsole):
                 break
 
         # Exit the Python shell on exiting the InteractiveConsole
-        sys.exit()
+        if threading.current_thread() == threading.main_thread():
+            sys.exit()
 
 
 if not os.getenv("SKIP_PYMP"):
