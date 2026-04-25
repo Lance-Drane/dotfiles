@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# set up environment variables for the entire login session
+# used for both "display managers" and login shells
+
+### XDG directories, making sure they are defined but not differentiating from the standard: https://specifications.freedesktop.org/basedir-spec/latest/
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_STATE_HOME="${HOME}/.local/state"
+export XDG_BIN_HOME="${HOME}/.local/bin"
+export XDG_DOWNLOAD_DIR="${HOME}/Downloads"
+export XDG_DOCUMENTS_DIR="${HOME}/Documents"
+export XDG_MUSIC_DIR="${HOME}/Music"
+export XDG_PICTURES_DIR="${HOME}/Pictures"
+export XDG_VIDEOS_DIR="${HOME}/Videos"
+export XDG_TEMPLATES_DIR="${HOME}/Templates"
+export XDG_PUBLICSHARE_DIR="${HOME}/Public"
+# this is probably set by the init system, but just double-check
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+export XDG_CONFIG_DIRS="/etc"
+export XDG_BIN_DIRS="/usr/local/bin:/usr/bin"
+export XDG_LIB_DIRS="/usr/local/lib:/usr/lib"
+
+# Force apps to use XDG dirs instead of ${HOME}, list of programs at https://github.com/b3nj5m1n/xdg-ninja
+export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"
+export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/config"
+export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
+# ZSH - note that this does not handle zprofile, only zshrc; also note that using this with zshenv is probably a bad idea
+export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
+# Ansible
+export ANSIBLE_HOME="${XDG_DATA_HOME}/ansible"
+# AWS
+export AWS_SHARED_CREDENTIALS_FILE="${XDG_CONFIG_HOME}/aws/credentials"
+export AWS_CONFIG_FILE="${XDG_CONFIG_HOME}/aws/config"
+# Docker
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
+export MACHINE_STORAGE_PATH="${XDG_DATA_HOME}/docker-machine"
+# Kubernetes
+export MINIKUBE_HOME="${XDG_DATA_HOME}/minikube"
+# Wine
+export WINEPREFIX="${XDG_DATA_HOME}/wine"
+# Golang
+export GOPATH="${XDG_DATA_HOME}/go"
+export GOMODCACHE="${XDG_CACHE_HOME}/go/mod"
+export PATH="${GOPATH}/bin:${PATH}"
+# Rust
+export CARGO_HOME="${XDG_DATA_HOME}/cargo"
+export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
+export PATH="${CARGO_HOME}/bin:${PATH}" # for binaries with "cargo install"
+# Python
+export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/pythonrc"
+export PYTHON_HISTORY="${XDG_STATE_HOME}/python/python_history"
+export RUFF_CACHE_DIR="${XDG_CACHE_HOME}/ruff"
+# Java
+export GRADLE_USER_HOME="${XDG_DATA_HOME}/gradle"
+# NodeJS
+export NPM_CONFIG_CACHE="${XDG_CACHE_HOME}/npm"
+export NPM_CONFIG_INIT_MODULE="${XDG_CONFIG_HOME}/npm/config/npm-init.js"
+export NPM_CONFIG_TMP="${XDG_RUNTIME_DIR}/npm"
+export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
+# Ruby
+export BUNDLE_USER_CONFIG="${XDG_CONFIG_HOME}/bundle"
+export BUNDLE_USER_CACHE="${XDG_CACHE_HOME}/bundle"
+export BUNDLE_USER_PLUGIN="${XDG_DATA_HOME}/bundle"
+export RBENV_ROOT="${XDG_DATA_HOME}"/rbenv
+# SQLite
+export SQLITE_HISTORY="${XDG_STATE_HOME}/sqlite_history"
+# Cuda
+export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
+
+# miscellaneous
+export _JAVA_AWT_WM_NONREPARENTING=1 # fix some Java applications in DWM
+
+# add user scripts to PATH
+export PATH="${HOME}/bin:${XDG_BIN_HOME}:${PATH}"
+
+# private env variables we don't want to commit to version control
+if [ -f "${XDG_CONFIG_HOME}/shell/envs-session.private" ]; then . "${XDG_CONFIG_HOME}/shell/envs-session.private"; fi
