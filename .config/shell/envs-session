@@ -16,12 +16,17 @@ export XDG_PICTURES_DIR="${HOME}/Pictures"
 export XDG_VIDEOS_DIR="${HOME}/Videos"
 export XDG_TEMPLATES_DIR="${HOME}/Templates"
 export XDG_PUBLICSHARE_DIR="${HOME}/Public"
-# this is probably set by the init system, but just double-check
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
-export XDG_DATA_DIRS="/usr/local/share:/usr/share"
-export XDG_CONFIG_DIRS="/etc"
-export XDG_BIN_DIRS="/usr/local/bin:/usr/bin"
-export XDG_LIB_DIRS="/usr/local/lib:/usr/lib"
+# this is probably set by the init system, but just double-check; don't set it again if it was already set
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+	_dotfiles_uid=$(id -u)
+	export XDG_RUNTIME_DIR="/run/user/${_dotfiles_uid}"
+fi
+# this can be set by Regolith, Gnome, and Snap
+[ -z "$XDG_DATA_DIRS" ] && export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+# this can be set by Regolith
+[ -z "$XDG_CONFIG_DIRS" ] && export XDG_CONFIG_DIRS="/etc/xdg"
+#[ -z "$XDG_BIN_DIRS" ] && export XDG_BIN_DIRS="/usr/local/bin:/usr/bin"
+#[ -z "$XDG_LIB_DIRS" ] && export XDG_LIB_DIRS="/usr/local/lib:/usr/lib"
 
 # Force apps to use XDG dirs instead of ${HOME}, list of programs at https://github.com/b3nj5m1n/xdg-ninja
 export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"

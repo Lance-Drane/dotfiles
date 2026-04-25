@@ -23,7 +23,6 @@
 !/.config/shell/
 !/.config/yazi/
 !/.config/yt-dlp/
-!/.config/xdg-terminals.list
 !/.config/zathura/
 
 # personal scripts are stored here, .local/bin/ is for installed scripts
