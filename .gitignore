@@ -10,11 +10,6 @@
 !/.config/kitty/
 !/.config/lazygit/
 !/.config/mpd/
-/.config/mpd/*
-!/.config/mpd/mpd.conf
-!/.config/mpd/playlists/
-/.config/mpd/playlists/*
-!/.config/mpd/playlists/.gitkeep
 !/.config/mpv/
 !/.config/npm/
 !/.config/nvim/
@@ -26,7 +21,7 @@
 !/.config/zathura/
 
 # personal scripts are stored here, .local/bin/ is for installed scripts
-!/bin
+!/bin/
 
 # permit ~/.local/share/applications (XDG spec) and ~/.local/share/dotfiles (miscellaneous )
 !/.local/
