@@ -1,5 +1,9 @@
 #!/usr/bin/python
-"""Get or set XML entity values in an internal DTD subset.
+"""Get or set fontconfig values, assuming all definitions are declared in an internal DTD subset.
+
+This allows the document to be parsed without using an XML library,
+though it should be understood that this is a very narrow usecase where
+the user's input should be assumed to be trusted.
 
 Example:
     python font_entities.py get fonts.conf math
@@ -18,14 +22,16 @@ from pathlib import Path
 # WARNING: only use prevalidated XML documents for this, this is meant for system usage and is faster but less secure than a real XML parser
 
 DOCTYPE_WITH_SUBSET_RE = re.compile(
-    r"<!DOCTYPE\b.*?\[(?P<subset>.*?)\]\s*>",
+    r"<!(?i:DOCTYPE)\s+fontconfig\s+SYSTEM\s+(?:\"([^\"]*)\"|'([^']*)')\s+\[(?P<subset>.*?)\]\s*>",
+    flags=re.DOTALL,
+)
+"""fontconfig DOCTYPES are always the same except for the DTD. assume no comments outside of the DTD"""
+
+ENTITY_DECL_RE = re.compile(
+    r"<!(?i:ENTITY)\s+([A-Za-z_][\w.\-:]*)\s+(?:\"([^\"]*)\"|'([^']*)')\s*>",
     flags=re.DOTALL,
 )
 
-ENTITY_DECL_RE = re.compile(
-    r"<!ENTITY\s+([A-Za-z_][\w.\-:]*)\s+(?:\"([^\"]*)\"|'([^']*)')\s*>",
-    flags=re.DOTALL,
-)
 
 ALIASES = {
     "mono": "monospace",
@@ -78,12 +84,8 @@ def _parse_entities_from_subset(subset: str) -> Generator[EntityDecl, None, None
             i = end + 3
             continue
 
-        if subset.startswith("<!ENTITY", i):
-            match = ENTITY_DECL_RE.match(subset, i)
-            if not match:
-                snippet = subset[i : min(i + 80, len(subset))].replace("\n", " ")
-                raise ValueError(f"Malformed ENTITY declaration near: {snippet!r}")
-
+        match = ENTITY_DECL_RE.match(subset, i)
+        if match:
             name = match.group(1)
             value = match.group(2) if match.group(2) is not None else match.group(3)
             quote = '"' if match.group(2) is not None else "'"
@@ -138,7 +140,7 @@ def set_entity_value(xml_text: str, entity_name: str, new_value: str) -> str:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Get or set the font types in fontconfig. (Could be extropolated to get/set any XML entity values in any internal DTD subset.)"
+        description="Get or set the font types in fontconfig. (Could be extended to get/set any XML entity values in any internal DTD subset.)"
     )
     parser.add_argument(
         "-f",
