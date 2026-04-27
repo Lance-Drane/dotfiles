@@ -1,0 +1,193 @@
+#!/usr/bin/python
+"""Get or set XML entity values in an internal DTD subset.
+
+Example:
+    python font_entities.py get fonts.conf math
+    python font_entities.py set fonts.conf nerdfont "0xProto Nerd Font"
+"""
+
+import argparse
+import os
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+# using regexes instead of Python's XML library or a third party library
+# WARNING: only use prevalidated XML documents for this, this is meant for system usage and is faster but less secure than a real XML parser
+
+DOCTYPE_WITH_SUBSET_RE = re.compile(
+    r"<!DOCTYPE\b.*?\[(?P<subset>.*?)\]\s*>",
+    flags=re.DOTALL,
+)
+
+ENTITY_DECL_RE = re.compile(
+    r"<!ENTITY\s+([A-Za-z_][\w.\-:]*)\s+(?:\"([^\"]*)\"|'([^']*)')\s*>",
+    flags=re.DOTALL,
+)
+
+ALIASES = {
+    "mono": "monospace",
+    "sans": "sansserif",
+    "sans serif": "sansserif",
+    "sans-serif": "sansserif",
+    "nerd": "nerdfont",
+}
+"""map acceptable cli args to actual values in fontconfig file"""
+
+CHOICES = [
+    "math",
+    "sansserif",
+    "serif",
+    "monospace",
+    "nerdfont",
+]
+"""Actual values in fontconfig file"""
+CHOICES.extend(list(ALIASES.keys()))
+"""allow aliases"""
+
+
+@dataclass(frozen=True)
+class EntityDecl:
+    name: str
+    value: str
+    quote: str
+    decl_start: int
+    decl_end: int
+
+
+class EntityNotFoundError(KeyError):
+    """Raised when an entity is not present in the internal DTD subset."""
+
+
+def _extract_subset(text: str) -> tuple[str, int]:
+    match = DOCTYPE_WITH_SUBSET_RE.search(text)
+    if not match:
+        raise ValueError("No internal DTD subset found in XML file.")
+    return match.group("subset"), match.start("subset")
+
+
+def _parse_entities_from_subset(subset: str) -> list[EntityDecl]:
+    entities: list[EntityDecl] = []
+    i = 0
+    while i < len(subset):
+        if subset.startswith("<!--", i):
+            end = subset.find("-->", i + 4)
+            if end == -1:
+                raise ValueError("Unterminated XML comment in internal DTD subset.")
+            i = end + 3
+            continue
+
+        if subset.startswith("<!ENTITY", i):
+            match = ENTITY_DECL_RE.match(subset, i)
+            if not match:
+                snippet = subset[i : min(i + 80, len(subset))].replace("\n", " ")
+                raise ValueError(f"Malformed ENTITY declaration near: {snippet!r}")
+
+            name = match.group(1)
+            value = match.group(2) if match.group(2) is not None else match.group(3)
+            quote = '"' if match.group(2) is not None else "'"
+            entities.append(
+                EntityDecl(
+                    name=name,
+                    value=value,
+                    quote=quote,
+                    decl_start=match.start(),
+                    decl_end=match.end(),
+                )
+            )
+            i = match.end()
+            continue
+
+        i += 1
+
+    return entities
+
+
+def get_entity_value(xml_text: str, entity_name: str) -> str:
+    subset, _ = _extract_subset(xml_text)
+    for entity in _parse_entities_from_subset(subset):
+        if entity.name == entity_name:
+            return entity.value
+    raise EntityNotFoundError(f"Entity {entity_name!r} not found in DTD.")
+
+
+def set_entity_value(xml_text: str, entity_name: str, new_value: str) -> str:
+    subset, subset_start = _extract_subset(xml_text)
+    entities = _parse_entities_from_subset(subset)
+
+    target = next((ent for ent in entities if ent.name == entity_name), None)
+    if target is None:
+        raise EntityNotFoundError(f"Entity {entity_name!r} not found in DTD.")
+
+    # Use a quote character that does not collide with the value.
+    if '"' not in new_value:
+        quote = '"'
+    elif "'" not in new_value:
+        quote = "'"
+    else:
+        raise ValueError("New value cannot contain both single and double quotes.")
+
+    new_decl = f"<!ENTITY {target.name} {quote}{new_value}{quote}>"
+
+    abs_start = subset_start + target.decl_start
+    abs_end = subset_start + target.decl_end
+    return xml_text[:abs_start] + new_decl + xml_text[abs_end:]
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Get or set the font types in fontconfig. (Could be extropolated to get/set any XML entity values in any internal DTD subset.)"
+    )
+    parser.add_argument(
+        "-f",
+        "--file",
+        type=Path,
+        default=f"{os.getenv('XDG_CONFIG_HOME') or os.path.expanduser('~/.config')}/fontconfig/fonts.conf",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    get_parser = subparsers.add_parser("get", help="Get fontconfig value")
+    get_parser.add_argument("entity", choices=CHOICES, help="Entity name")
+
+    set_parser = subparsers.add_parser("set", help="Set fontconfig value")
+    set_parser.add_argument("entity", choices=CHOICES, help="Entity name")
+    set_parser.add_argument("value", help="New value")
+
+    return parser
+
+
+def main() -> int:
+    parser = _build_parser()
+    args = parser.parse_args()
+    path: Path = args.file
+
+    entity = ALIASES.get(args.entity, args.entity)
+    if not entity:
+        parser.error("Entity not found")
+
+    xml_text = path.read_text(encoding="utf-8")
+
+    if args.command == "get":
+        try:
+            print(get_entity_value(xml_text, entity))
+            return 0
+        except Exception as e:
+            print(e, file=sys.stderr)
+            return 1
+
+    if args.command == "set":
+        try:
+            updated = set_entity_value(xml_text, entity, args.value)
+            path.write_text(updated, encoding="utf-8")
+            print(f"Updated entity {args.entity!r} in {path}")
+            return 0
+        except Exception as e:
+            print(e, file=sys.stderr)
+            return 1
+
+    parser.error("Unknown command")
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
