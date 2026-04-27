@@ -16,7 +16,7 @@ export XDG_PICTURES_DIR="${HOME}/Pictures"
 export XDG_VIDEOS_DIR="${HOME}/Videos"
 export XDG_TEMPLATES_DIR="${HOME}/Templates"
 export XDG_PUBLICSHARE_DIR="${HOME}/Public"
-# this is probably set by the init system, but just double-check; don't set it again if it was already set
+# this is probably set by the init system (always set by systemd), but just double-check; don't set it again if it was already set
 if [ -z "$XDG_RUNTIME_DIR" ]; then
 	_dotfiles_uid=$(id -u)
 	export XDG_RUNTIME_DIR="/run/user/${_dotfiles_uid}"
@@ -32,6 +32,7 @@ fi
 export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/config"
 export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
+export LESSHISTFILE="${XDG_STATE_HOME}/lesshst" # this can be removed once all my computers use Less version >= 598
 # ZSH - note that this does not handle zprofile, only zshrc; also note that using this with zshenv is probably a bad idea
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 # Ansible
@@ -83,6 +84,13 @@ export _JAVA_AWT_WM_NONREPARENTING=1 # fix some Java applications in DWM
 
 # add user scripts to PATH
 export PATH="${HOME}/bin:${XDG_BIN_HOME}:${PATH}"
+
+# standard applications
+export EDITOR="nvim"    # posix
+export VISUAL="nvim"    # posix
+export PAGER="less"     # posix
+export TERMINAL="kitty" # used by xdg-open and some other programs
+#export BROWSER="firefox" # used by xdg-open and some development tools i.e. vite
 
 # private env variables we don't want to commit to version control
 if [ -f "${XDG_CONFIG_HOME}/shell/envs-session.private" ]; then . "${XDG_CONFIG_HOME}/shell/envs-session.private"; fi
