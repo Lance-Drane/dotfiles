@@ -181,7 +181,9 @@ def main() -> int:
         try:
             updated = set_entity_value(xml_text, entity, args.value)
             path.write_text(updated, encoding="utf-8")
-            print(f"Updated entity {args.entity!r} in {path}")
+            print(
+                f"Updated entity {args.entity!r} in {path}, run 'fc-cache -f' to refresh the font cache"
+            )
             return 0
         except Exception as e:
             print(e, file=sys.stderr)
