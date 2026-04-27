@@ -10,6 +10,7 @@ import argparse
 import os
 import re
 import sys
+from collections.abc import Generator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -67,8 +68,7 @@ def _extract_subset(text: str) -> tuple[str, int]:
     return match.group("subset"), match.start("subset")
 
 
-def _parse_entities_from_subset(subset: str) -> list[EntityDecl]:
-    entities: list[EntityDecl] = []
+def _parse_entities_from_subset(subset: str) -> Generator[EntityDecl, None, None]:
     i = 0
     while i < len(subset):
         if subset.startswith("<!--", i):
@@ -87,21 +87,17 @@ def _parse_entities_from_subset(subset: str) -> list[EntityDecl]:
             name = match.group(1)
             value = match.group(2) if match.group(2) is not None else match.group(3)
             quote = '"' if match.group(2) is not None else "'"
-            entities.append(
-                EntityDecl(
-                    name=name,
-                    value=value,
-                    quote=quote,
-                    decl_start=match.start(),
-                    decl_end=match.end(),
-                )
+            yield EntityDecl(
+                name=name,
+                value=value,
+                quote=quote,
+                decl_start=match.start(),
+                decl_end=match.end(),
             )
             i = match.end()
             continue
 
         i += 1
-
-    return entities
 
 
 def get_entity_value(xml_text: str, entity_name: str) -> str:
@@ -113,13 +109,6 @@ def get_entity_value(xml_text: str, entity_name: str) -> str:
 
 
 def set_entity_value(xml_text: str, entity_name: str, new_value: str) -> str:
-    subset, subset_start = _extract_subset(xml_text)
-    entities = _parse_entities_from_subset(subset)
-
-    target = next((ent for ent in entities if ent.name == entity_name), None)
-    if target is None:
-        raise EntityNotFoundError(f"Entity {entity_name!r} not found in DTD.")
-
     # Use a quote character that does not collide with the value.
     if '"' not in new_value:
         quote = '"'
@@ -127,6 +116,18 @@ def set_entity_value(xml_text: str, entity_name: str, new_value: str) -> str:
         quote = "'"
     else:
         raise ValueError("New value cannot contain both single and double quotes.")
+
+    subset, subset_start = _extract_subset(xml_text)
+    target = next(
+        (
+            entity
+            for entity in _parse_entities_from_subset(subset)
+            if entity.name == entity_name
+        ),
+        None,
+    )
+    if target is None:
+        raise EntityNotFoundError(f"Entity {entity_name!r} not found in DTD.")
 
     new_decl = f"<!ENTITY {target.name} {quote}{new_value}{quote}>"
 
