@@ -25,12 +25,17 @@ DOCTYPE_WITH_SUBSET_RE = re.compile(
     r"<!(?i:DOCTYPE)\s+fontconfig\s+SYSTEM\s+(?:\"([^\"]*)\"|'([^']*)')\s+\[(?P<subset>.*?)\]\s*>",
     flags=re.DOTALL,
 )
-"""fontconfig DOCTYPES are always the same except for the DTD. assume no comments outside of the DTD"""
+"""fontconfig DOCTYPES are always the same except for the DTD.
+
+assume no comments outside of the DTD, assume no commented DTD before the actual one
+also assume that there is nothing with a ]> inside the doctypes
+"""
 
 ENTITY_DECL_RE = re.compile(
     r"<!(?i:ENTITY)\s+([A-Za-z_][\w.\-:]*)\s+(?:\"([^\"]*)\"|'([^']*)')\s*>",
     flags=re.DOTALL,
 )
+"""might fail if there's a > inside the quoted value (there shouldn't be)"""
 
 
 ALIASES = {
@@ -155,6 +160,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--file",
         type=Path,
         default=f"{os.getenv('XDG_CONFIG_HOME') or os.path.expanduser('~/.config')}/fontconfig/fonts.conf",
+        help="path to fontconfig path (default: ${XDG_CONFIG_HOME}/fontconfig/fonts.conf)",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -185,7 +191,11 @@ def main() -> int:
     if not family:
         parser.error("font family not provided")
 
-    xml_text = path.read_text(encoding="utf-8")
+    try:
+        xml_text = path.read_text(encoding="utf-8")
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return 1
 
     if args.command == "get":
         try:
