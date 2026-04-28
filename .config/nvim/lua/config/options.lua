@@ -5,7 +5,7 @@
 local opt = vim.opt
 opt.expandtab = false
 opt.swapfile = false
-opt.tabstop = 4
+opt.tabstop = 8
 
 vim.g.lazyvim_python_lsp = "basedpyright"
 --vim.g.lazyvim_python_lsp = "ty"
