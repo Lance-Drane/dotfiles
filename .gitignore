@@ -5,6 +5,7 @@
 # specific config files
 !/.config/
 /.config/*
+!/.config/bat/
 !/.config/btop/
 !/.config/fontconfig/
 !/.config/kitty/
