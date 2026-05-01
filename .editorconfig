@@ -13,7 +13,7 @@ trim_trailing_whitespace = false
 
 ### pointless tab/space opinions below
 
-[*.{awk,c,cpp,go,h,hpp,java,lua,make,md,mk,rst,sh},Makefile,Makefile.*]
+[*.{awk,c,cpp,go,h,hpp,java,lua,make,md,mk,rst,sh,zig},Makefile,Makefile.*]
 indent_style = tab
 tab_width = 8
 
