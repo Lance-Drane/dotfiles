@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# wrapper script for xdg-open, which is both used by external applications and also assumes a desktop session
+# make sure this script appears in $PATH before the actual xdg-open
+#
+# TODO this is a prime candidate for extension via dmenu/rofi
+
+scheme=$(echo "$1" | cut -d : -f 1)
+
+case $scheme in
+"http" | "https")
+	exec "$BROWSER" "$1"
+	;;
+"mailto")
+	exec "$MAILAPP" "$1"
+	;;
+*)
+	mime=$(file --mime-type "$1" | awk '{ print $NF }')
+	case $mime in
+	"audio/*" | "video/*")
+		exec mpv "$1"
+		;;
+	*)
+		# fallback to primary xdg-open binary
+		exec /usr/bin/xdg-open "$@"
+		;;
+	esac
+	;;
+esac

@@ -96,6 +96,7 @@ export VISUAL="nvim"    # posix
 export PAGER="less"     # posix
 export TERMINAL="kitty" # used by xdg-open and some other programs
 #export BROWSER="firefox" # used by xdg-open and some development tools i.e. vite
+#export MAILAPP="$BROWSER" # used by my personal xdg-open script
 
 # private env variables we don't want to commit to version control
 if [ -f "${XDG_CONFIG_HOME}/shell/envs-session.private" ]; then . "${XDG_CONFIG_HOME}/shell/envs-session.private"; fi
