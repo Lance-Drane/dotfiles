@@ -15,7 +15,7 @@ case $scheme in
 	exec "$MAILAPP" "$1"
 	;;
 *)
-	mime=$(file --mime-type "$1" | awk '{ print $NF }')
+	mime=$(file --brief --dereference --mime-type "$1")
 	case $mime in
 	"audio/*" | "video/*")
 		exec mpv "$1"
