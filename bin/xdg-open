@@ -1,28 +1,65 @@
 #!/bin/sh
 
+set -eu
+
 # wrapper script for xdg-open, which is both used by external applications and also assumes a desktop session
 # make sure this script appears in $PATH before the actual xdg-open
 #
 # TODO this is a prime candidate for extension via dmenu/rofi
 
-scheme=$(echo "$1" | cut -d : -f 1)
+uri="$1"
+
+# $1 = the application to execute inside the terminal
+termexec() {
+	# don't open the application in a new terminal IF we are already in a terminal
+	if [ -t 0 ]; then
+		exec "$1" "$uri"
+	else
+		exec "$TERMINAL" -e "$1" "$uri"
+	fi
+}
+
+# xdg-open by default only handles http(s) schemes, and not very well
+# by default, this script handles schemes as files, some schemes such as git:// are ignored
+scheme=$(echo "$uri" | cut -d : -f 1)
 
 case $scheme in
-"http" | "https")
-	exec "$BROWSER" "$1"
+'http' | 'https')
+	exec "$BROWSER" "$uri"
 	;;
-"mailto")
-	exec "$MAILAPP" "$1"
+'mailto')
+	# this may or may not be the browser
+	exec "$MAILAPP" "$uri"
+	;;
+'gopher')
+	termexec lynx
+	;;
+'ssh')
+	termexec ssh
+	;;
+'steam')
+	exec steam "$uri"
 	;;
 *)
-	mime=$(file --brief --dereference --mime-type "$1")
+	mime=$(file --brief --dereference --mime-type "$uri")
 	case $mime in
-	"audio/*" | "video/*")
-		exec mpv "$1"
+	'application/pdf')
+		exec zathura "$uri"
 		;;
-	*)
+	'image/svg+xml')
+		# probably feh
+		exec /usr/bin/xdg-open "$uri"
+		;;
+	'image/*')
+		# probably feh
+		exec /usr/bin/xdg-open "$uri"
+		;;
+	'audio/*' | 'video/*')
+		exec mpv "$uri"
+		;;
+	'*')
 		# fallback to primary xdg-open binary
-		exec /usr/bin/xdg-open "$@"
+		exec /usr/bin/xdg-open "$uri"
 		;;
 	esac
 	;;
