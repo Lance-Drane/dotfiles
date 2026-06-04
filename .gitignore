@@ -18,6 +18,7 @@
 !/.config/ripgrep/
 !/.config/rmpc/
 !/.config/shell/
+!/.config/tmux/
 !/.config/user-dirs.dirs
 !/.config/user-dirs.locale
 !/.config/yazi/
