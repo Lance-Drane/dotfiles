@@ -1,0 +1,32 @@
+# common temporary files or debugging I do
+*.log
+/tmp/
+
+# vim
+*.swp
+*.bkp
+*.bak
+
+# vscode
+.vscode/settings.json
+
+# compressed files
+*.bz
+*.gz
+*.tar
+*.xz
+*.zstd
+*.zip
+
+# python
+.venv
+*.pyc
+__pycache__
+.ruff_cache
+.mypy_cache
+
+# various build systems
+build/
+target/
+node_modules/
+
