@@ -8,6 +8,8 @@
 !/.config/bat/
 !/.config/btop/
 !/.config/fontconfig/
+!/.config/git/
+/.config/git/credentials # ignore credentials file
 !/.config/kitty/
 !/.config/lazygit/
 !/.config/mpd/
