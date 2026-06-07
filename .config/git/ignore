@@ -1,9 +1,11 @@
 # common temporary files or debugging I do
 *.log
+*.out
+*.err
 /tmp/
 
-# vim
-*.swp
+# backups
+*.sw[a-p]
 *.bkp
 *.bak
 
@@ -24,6 +26,9 @@
 __pycache__
 .ruff_cache
 .mypy_cache
+
+# c
+*.o
 
 # various build systems
 build/
