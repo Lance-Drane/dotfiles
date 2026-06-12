@@ -1,0 +1,8 @@
+# flags to always include with common commands
+alias ls='ls -haN --color=auto --hyperlink --group-directories-first'
+alias grep='grep --color=auto'
+alias eza='eza -agX --icons --hyperlink --group-directories-first'
+
+# custom aliases
+alias dotfiles="git --git-dir ${HOME}/.dotfiles-git --work-tree ${HOME}"
+
