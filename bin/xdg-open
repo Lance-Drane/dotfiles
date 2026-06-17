@@ -40,6 +40,15 @@ case $scheme in
 'steam')
 	exec steam "$uri"
 	;;
+'chrome')
+	exec chromium "$uri"
+	;;
+'firefox')
+	exec firefox "$uri"
+	;;
+'brave')
+	exec brave-browser "$uri"
+	;;
 *)
 	mime=$(file --brief --dereference --mime-type "$uri")
 	case $mime in

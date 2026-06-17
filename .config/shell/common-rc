@@ -6,14 +6,18 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -Iv'
 
-# custom aliases
+# $HOME cleanup
+alias nvidia-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
+
+# Make sure kitty can still ssh
+[ "$TERM" = "xterm-kitty" ] && alias ssh="kitten ssh"
+
+### CUSTOM ALIASES ###
+
 alias dotfiles="git --git-dir ${HOME}/.dotfiles-git --work-tree ${HOME}"
 
 # yt-dlp dependencies needed: python, ffmpeg, ffprobe, python-mutagen
 alias yt-video='yt-dlp -f bestvideo+bestaudio --embed-chapters --embed-metadata --embed-thumbnail --embed-subs --sub-langs "en.*"'
 alias yt-music='yt-dlp -f bestaudio -x --embed-thumbnail --embed-metadata --audio-format mp3 --audio-quality 0 -o "%(album_artist)s/%(album)s/%(playlist_index)s_%(title)s.%(ext)s" --parse-metadata "%(album_artist,channel,creator,artist|Unknown)s:%(album_artist)s"'
 alias yt-meta='yt-dlp --embed-metadata --skip-download --write-thumbnail'
-
-# $HOME cleanup
-alias nvidia-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 
