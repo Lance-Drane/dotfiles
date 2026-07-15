@@ -30,6 +30,8 @@
 	autoSetupRemote = true
 	default = simple
 [rebase]
+	autoSquash = true
+	autoStash = true
 	updateRefs = true
 [rerere]
 	autoupdate = true
