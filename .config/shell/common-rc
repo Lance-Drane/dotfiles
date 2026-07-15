@@ -14,7 +14,7 @@ alias nvidia-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settin
 
 ### CUSTOM ALIASES ###
 
-alias dotfiles="git --git-dir ${HOME}/.dotfiles-git --work-tree ${HOME}"
+alias dotfiles='git --git-dir ~/.dotfiles-git --work-tree ~'
 
 # yt-dlp dependencies needed: python, ffmpeg, ffprobe, python-mutagen
 alias yt-video='yt-dlp -f bestvideo+bestaudio --embed-chapters --embed-metadata --embed-thumbnail --embed-subs --sub-langs "en.*"'
