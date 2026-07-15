@@ -1,18 +1,39 @@
+# "man git-config" | https://git-scm.com/docs/git-config
+# also see https://blog.gitbutler.com/how-git-core-devs-configure-git for rationale of some of these
 [alias]
 	pushf = push --force-with-lease --force-if-includes
 [branch]
 	sort = -committerdate
+[column]
+	ui = auto
+[commit]
+	verbose = true
 [diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
 	submodule = log
 [fetch]
+	all = true
 	prune = true
+	pruneTags = true
+[help]
+	autocorrect = prompt
 [init]
 	defaultBranch = main
+[merge]
+	conflictstyle = zdiff3
 [pull]
 	rebase = true
 [push]
 	autoSetupRemote = true
 	default = simple
+[rebase]
+	updateRefs = true
+[rerere]
+	autoupdate = true
+	enabled = true
 [tag]
 	sort = -version:refname
 [url "https://github.com/"]
