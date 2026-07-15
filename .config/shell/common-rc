@@ -21,3 +21,5 @@ alias yt-video='yt-dlp -f bestvideo+bestaudio --embed-chapters --embed-metadata 
 alias yt-music='yt-dlp -f bestaudio -x --embed-thumbnail --embed-metadata --audio-format mp3 --audio-quality 0 -o "%(album_artist)s/%(album)s/%(playlist_index)s_%(title)s.%(ext)s" --parse-metadata "%(album_artist,channel,creator,artist|Unknown)s:%(album_artist)s"'
 alias yt-meta='yt-dlp --embed-metadata --skip-download --write-thumbnail'
 
+[ -f "${XDG_CONFIG_HOME}/shell/common-rc.private" ] && . "${XDG_CONFIG_HOME}/shell/common-rc.private"
+
