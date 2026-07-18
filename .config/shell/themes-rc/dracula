@@ -1,4 +1,4 @@
-# colored man pages
+# colored man pages, see https://unix.stackexchange.com/questions/119/colors-in-man-pages
 export LESS="-R --use-color"
 #export MANPAGER="less -s -M -Dd+g -Du+b"
 export MANPAGER="less -s -M +Gg"
@@ -10,6 +10,7 @@ export LESS_TERMCAP_me=$'\e[0m'         # reset bold/blink
 export LESS_TERMCAP_se=$'\e[0m'         # reset reverse video
 export LESS_TERMCAP_ue=$'\e[0m'         # reset underline
 export GROFF_NO_SGR=1
+#export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
 
 # CLI utils
 export GREP_COLORS='mt=1;38;2;255;85;85:fn=38;2;255;121;198:ln=38;2;80;250;123:bn=38;2;80;250;123:se=38;2;139;233;253'
