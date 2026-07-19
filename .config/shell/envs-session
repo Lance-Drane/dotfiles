@@ -83,6 +83,12 @@ export SQLITE_HISTORY="${XDG_STATE_HOME}/sqlite_history"
 export PSQL_HISTORY="${XDG_STATE_HOME}/psql_history"
 # Cuda
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
+# Codex
+export CODEX_HOME="${XDG_CONFIG_HOME}/codex"
+# Github CoPilot - https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference#changing-the-location-of-the-configuration-directory
+export COPILOT_HOME="${XDG_CONFIG_HOME}/copilot"
+# Claude
+export CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME}/claude"
 
 # miscellaneous
 export _JAVA_AWT_WM_NONREPARENTING=1 # fix some Java applications in DWM
