@@ -97,10 +97,12 @@ bindkey -M visual '^[[3~' vi-delete
 # ALT + C - cd into selected directory
 # CTRL + T - paste selected file path(s) into command line
 command -v fzf &>/dev/null && {
-  {
+  if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
     source /usr/share/fzf/key-bindings.zsh
     source /usr/share/fzf/completion.zsh
-  } || source <(fzf --zsh)
+  else
+    source <(fzf --zsh)
+  fi
   source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/fzf-git.sh"
 }
 
@@ -108,5 +110,6 @@ command -v fzf &>/dev/null && {
 command -v starship &>/dev/null && eval "$(starship init zsh)"
 
 # Load syntax highlighting; should be last.
-[ -f /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ] && source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+[[ -f /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] && source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
