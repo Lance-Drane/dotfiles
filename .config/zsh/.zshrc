@@ -22,7 +22,6 @@ setopt prompt_percent
 setopt prompt_sp
 setopt share_history
 setopt typeset_silent
-#unsetopt auto_menu
 unsetopt auto_remove_slash
 unsetopt beep
 unsetopt bg_nice
@@ -51,51 +50,51 @@ source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/theme-rc"
 source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/common-rc"
 
 # need more timeout for fzf-git
-export KEYTIMEOUT=2
+# export ZVM_READKEY_ENGINE=zle
+# export KEYTIMEOUT=0.5
 
 # general terminal keybindings
-# NOTE: a lot of these are specific to ST
-bindkey '^[[H' beginning-of-line # Home key
-bindkey '^[[4~' end-of-line # End key
-bindkey '^[[P' delete-char # Del key
-bindkey '^[[1;5C' forward-word # Ctrl + right arrow
-bindkey '^[[1;5D' backward-word # Ctrl + left arrow
-bindkey '^H' backward-kill-word # Ctrl + Backspace
-bindkey '^[[M' kill-word # Ctrl + Delete
+# bindkey '^[[H' beginning-of-line # Home key
+# bindkey '^[[4~' end-of-line # End key
+# bindkey '^[[P' delete-char # Del key
+# bindkey '^[[1;5C' forward-word # Ctrl + right arrow
+# bindkey '^[[1;5D' backward-word # Ctrl + left arrow
+# bindkey '^H' backward-kill-word # Ctrl + Backspace
+# bindkey '^[[M' kill-word # Ctrl + Delete
 
 # vi mode
-bindkey -v
+# bindkey -v
 # Use vim keys in tab complete menu:
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^?' backward-delete-char
-
-# Change cursor shape for different vi modes.
-function zle-keymap-select {
-    case $KEYMAP in
-	vicmd) echo -ne '\e[1 q';;      # block
-	viins|main) echo -ne '\e[5 q';; # beam
-    esac
-}
-zle_highlight=('paste:none')
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-}
-zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+# bindkey -M menuselect 'h' vi-backward-char
+# bindkey -M menuselect 'k' vi-up-line-or-history
+# bindkey -M menuselect 'l' vi-forward-char
+# bindkey -M menuselect 'j' vi-down-line-or-history
+# bindkey -v '^?' backward-delete-char
+#
+# # Change cursor shape for different vi modes.
+# function zle-keymap-select {
+#     case $KEYMAP in
+# 	vicmd) echo -ne '\e[1 q';;      # block
+# 	viins|main) echo -ne '\e[5 q';; # beam
+#     esac
+# }
+# zle_highlight=('paste:none')
+# zle -N zle-keymap-select
+# zle-line-init() {
+#     zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+#     echo -ne "\e[5 q"
+# }
+# zle -N zle-line-init
+# echo -ne '\e[5 q' # Use beam shape cursor on startup.
+# preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 
 # Edit line in vim with ctrl-e:
-autoload edit-command-line && zle -N edit-command-line
-bindkey '^e' edit-command-line
-bindkey -M vicmd '^[[P' vi-delete-char
-bindkey -M vicmd '^e' edit-command-line
-bindkey -M visual '^[[P' vi-delete
+# autoload edit-command-line && zle -N edit-command-line
+# bindkey '^e' edit-command-line
+# bindkey -M vicmd '^[[P' vi-delete-char
+# bindkey -M vicmd '^e' edit-command-line
+# bindkey -M visual '^[[P' vi-delete
 
 # FZF integration
 # CTRL + R - paste selected command from history into command line
