@@ -51,16 +51,16 @@ source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/common-rc"
 
 # need more timeout for fzf-git
 # export ZVM_READKEY_ENGINE=zle
-# export KEYTIMEOUT=0.5
+export KEYTIMEOUT=200  # hundreths of a second
 
 # general terminal keybindings
-# bindkey '^[[H' beginning-of-line # Home key
-# bindkey '^[[4~' end-of-line # End key
-# bindkey '^[[P' delete-char # Del key
-# bindkey '^[[1;5C' forward-word # Ctrl + right arrow
-# bindkey '^[[1;5D' backward-word # Ctrl + left arrow
-# bindkey '^H' backward-kill-word # Ctrl + Backspace
-# bindkey '^[[M' kill-word # Ctrl + Delete
+bindkey '^[[H' beginning-of-line # Home key
+bindkey '^[[F' end-of-line # End key
+bindkey '^[[3~' delete-char # Del key
+bindkey '^[[1;5C' forward-word # Ctrl + right arrow
+bindkey '^[[1;5D' backward-word # Ctrl + left arrow
+bindkey '^H' backward-kill-word # Ctrl + Backspace OR Ctrl + H
+bindkey '^[[3;5~' kill-word # Ctrl + Delete
 
 # vi mode
 # bindkey -v
@@ -72,34 +72,33 @@ source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/common-rc"
 # bindkey -v '^?' backward-delete-char
 #
 # # Change cursor shape for different vi modes.
-# function zle-keymap-select {
-#     case $KEYMAP in
-# 	vicmd) echo -ne '\e[1 q';;      # block
-# 	viins|main) echo -ne '\e[5 q';; # beam
-#     esac
-# }
-# zle_highlight=('paste:none')
-# zle -N zle-keymap-select
-# zle-line-init() {
-#     zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-#     echo -ne "\e[5 q"
-# }
-# zle -N zle-line-init
-# echo -ne '\e[5 q' # Use beam shape cursor on startup.
-# preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
-
+function zle-keymap-select {
+    case $KEYMAP in
+	vicmd) echo -ne '\e[1 q';;      # block
+	viins|main) echo -ne '\e[5 q';; # beam
+    esac
+}
+zle_highlight=('paste:none')
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # Edit line in vim with ctrl-e:
-# autoload edit-command-line && zle -N edit-command-line
-# bindkey '^e' edit-command-line
-# bindkey -M vicmd '^[[P' vi-delete-char
-# bindkey -M vicmd '^e' edit-command-line
-# bindkey -M visual '^[[P' vi-delete
+autoload edit-command-line && zle -N edit-command-line
+bindkey '^e' edit-command-line
+bindkey -M vicmd '^[[3~' vi-delete-char
+bindkey -M vicmd '^e' edit-command-line
+bindkey -M visual '^[[3~' vi-delete
 
 # FZF integration
 # CTRL + R - paste selected command from history into command line
 # ALT + C - cd into selected directory
-# CTRL + T 0 paste selected file path(s) into command line
+# CTRL + T - paste selected file path(s) into command line
 command -v fzf &>/dev/null && {
   {
     source /usr/share/fzf/key-bindings.zsh
