@@ -27,6 +27,9 @@
 !/.config/yazi/
 !/.config/yt-dlp/
 !/.config/zathura/
+!/.config/zsh/
+/.config/zsh/*
+!/.config/zsh/.zshrc
 
 # personal scripts are stored here, .local/bin/ is for installed scripts
 !/bin/

@@ -9,6 +9,7 @@ alias rm='rm -Iv'
 alias mkdir='mkdir -p'
 alias tree='tree -a -I .git -I .venv -I node_modules -I target'
 alias eza='eza -agX --icons --hyperlink --group-directories-first -I .git -I .venv -I node_modules -I target'
+alias bc='bc -lq'
 
 # $HOME cleanup
 alias nvidia-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'

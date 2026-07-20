@@ -36,16 +36,27 @@ $maven\
 $gradle\
 $python\
 $nodejs\
-\n$status$character"""
+\n$status$character\
+"""
+
+right_format = """
+$cmd_duration\
+"""
 
 [status]
 disabled = false
+
+[cmd_duration]
+min_time = 3_000  # in milliseconds
+show_milliseconds = true
+format = '[ $duration]($style)'
 
 [directory]
 style = "fg:#e3e5e5 bg:#769ff0"
 format = "[$path]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
+home_symbol = ' '
 
 [directory.substitutions]
 "Documents" = "󰈙 "
