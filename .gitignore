@@ -34,13 +34,14 @@
 # personal scripts are stored here, .local/bin/ is for installed scripts
 !/bin/
 
-# permit ~/.local/share/applications (XDG spec) and ~/.local/share/dotfiles (miscellaneous )
+# permit certain files under ~/.local/share/applications (XDG spec) and ~/.local/share/dotfiles (miscellaneous )
 !/.local/
 /.local/*
 #!/.local/bin/
 !/.local/share/
 /.local/share/*
 !/.local/share/applications/
+/.local/share/applications/*
 !/.local/share/dotfiles/
 
 # ignore private files
