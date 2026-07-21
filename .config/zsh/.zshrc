@@ -176,13 +176,22 @@ command -v fzf &>/dev/null && {
 # prompt
 command -v starship &>/dev/null && eval "$(starship init zsh)"
 
-# Load syntax highlighting; must be after everything else except autosuggestions.
-[[ -f /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] && source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Load autosuggestions
-[[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && {
+_personal_zsh_autosuggestions_loaded=''
+if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  _personal_zsh_autosuggestions_loaded='1'
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  _personal_zsh_autosuggestions_loaded='1'
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+[[ -n $_personal_zsh_autosuggestions_loaded ]] && {
   bindkey '^ ' autosuggest-accept  # Ctrl + Space - accepts the suggestion, but does not execute
   ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # autosuggest history first, then try a completion
 }
+unset _personal_zsh_autosuggestions_loaded
+
+# Load syntax highlighting; must be after everything else.
+[[ -f /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] && source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
