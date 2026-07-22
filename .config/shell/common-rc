@@ -6,7 +6,7 @@ y() {
 	shift $(($# - 1))
 	set -- "$(command cat < "$1"; printf .; command rm -f -- "$1")"
 	set -- "${1%.}"
-        if [ "$1" != "$PWD" ] && [ -d "$1" ] ; then builtin cd -- "$1"; fi
+        if [ "$1" != "$PWD" ] && [ -d "$1" ] ; then cd -- "$1"; fi
 }
 
 # flags to always include with common commands
@@ -21,6 +21,9 @@ alias mkdir='mkdir -p'
 alias tree='tree -a -I .git -I .venv -I node_modules -I target'
 alias eza='eza -agX --icons --hyperlink --group-directories-first -I .git -I .venv -I node_modules -I target'
 alias bc='bc -lq'
+
+# set up nohup so it can deal with an argument that is an alias name - from POSIX 'alias' page examples
+alias nohup="nohup "
 
 # fix stupid variance between binary names across different Linux distros
 command -v batcat &>/dev/null && alias bat='batcat'
