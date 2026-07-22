@@ -1,3 +1,14 @@
+# yazi wrapper which allows using 'q' to change to current working directory when exiting
+# (use 'Q' to stay in directory where yazi was launched)
+y() {
+	set -- "$@" --cwd-file "$(mktemp -t yazi-cwd.XXXXXX)"
+	command yazi "$@"
+	shift $(($# - 1))
+	set -- "$(command cat < "$1"; printf .; command rm -f -- "$1")"
+	set -- "${1%.}"
+        if [ "$1" != "$PWD" ] && [ -d "$1" ] ; then builtin cd -- "$1"; fi
+}
+
 # flags to always include with common commands
 alias ls='ls -haN --color=auto --hyperlink --group-directories-first'
 alias grep='grep --color=auto'
