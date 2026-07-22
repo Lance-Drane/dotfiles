@@ -13,6 +13,7 @@ alias bc='bc -lq'
 
 # fix stupid variance between binary names across different Linux distros
 command -v batcat &>/dev/null && alias bat='batcat'
+command -v fdfind &>/dev/null && alias fd='fdfind'
 
 # directory simplification
 alias ...='cd ../../'

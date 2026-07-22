@@ -93,7 +93,7 @@ zstyle ':completion:*:*:killall:*' force-list always
 
 # man page completion
 zstyle ':completion:*:manuals'    separate-sections true
-zstyle ':completion:*:manuals.*'  insert-sections   true
+#zstyle ':completion:*:manuals.*'  insert-sections   true
 zstyle ':completion:*:man:*'      menu yes select
 
 # if hosts are listed in ~/.ssh/config , improve completions for ssh
