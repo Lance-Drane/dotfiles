@@ -6,7 +6,7 @@ y() {
 	shift $(($# - 1))
 	set -- "$(command cat < "$1"; printf .; command rm -f -- "$1")"
 	set -- "${1%.}"
-        if [ "$1" != "$PWD" ] && [ -d "$1" ] ; then cd -- "$1"; fi
+	if [ "$1" != "$PWD" ] && [ -d "$1" ] ; then cd -- "$1" || echo "directory $1 does not exist (was it removed?)"; fi
 }
 
 # flags to always include with common commands
@@ -26,8 +26,8 @@ alias bc='bc -lq'
 alias nohup="nohup "
 
 # fix stupid variance between binary names across different Linux distros
-command -v batcat &>/dev/null && alias bat='batcat'
-command -v fdfind &>/dev/null && alias fd='fdfind'
+command -v batcat >/dev/null && alias bat='batcat'
+command -v fdfind >/dev/null && alias fd='fdfind'
 
 # directory simplification
 alias ..='cd ..'
