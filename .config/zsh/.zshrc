@@ -172,7 +172,7 @@ command -v fzf &>/dev/null && {
     source <(fzf --zsh)
   fi
   # CTRL + G , then '?' , gives the keybinding list
-  source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/fzf-git.sh"
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lib/fzf-git.sh"
 }
 
 # prompt
