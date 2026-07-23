@@ -82,7 +82,7 @@ zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
 # prettier kill
-zstyle ':completion:*:processes' command 'ps -au $LOGNAME -o pid,ppid,command'
+zstyle ':completion:*:processes' command 'ps -au $LOGNAME -o pid,ppid,cmd'
 zstyle ':completion:*:*:kill:*' list-colors "=(#b) #([0-9]#) #([0-9]#)*=${DF_THEME_EXECUTABLE}=38;5;124=34" # pid in red, parent pid in blue
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
