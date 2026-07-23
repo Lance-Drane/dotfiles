@@ -19,13 +19,21 @@
 # yellow = "#f1fa8c"
 
 format = """
-$jobs\
+$username\
+$hostname\
 $directory\
 [](fg:#769ff0 bg:#394260)\
 $git_branch\
 $git_status\
 $git_state\
 [](fg:#394260 bg:#212736)\
+$jobs\
+$cmd_duration\
+[](fg:#212736 bg:#1d2230)\
+\n$status$character\
+"""
+
+right_format = """
 $package\
 $c\
 $zig\
@@ -36,20 +44,19 @@ $maven\
 $gradle\
 $python\
 $nodejs\
-\n$status$character\
-"""
-
-right_format = """
-$cmd_duration\
 """
 
 [status]
 disabled = false
 
-[cmd_duration]
-min_time = 3_000  # in milliseconds
-show_milliseconds = true
-format = '[ $duration]($style)'
+[username]
+style = "fg:#e3e5e5 bg:#769ff0"
+format = '[$user]($style)'
+
+[hostname]
+ssh_only = true
+style = "fg:#e3e5e5 bg:#769ff0"
+format = '[@$hostname ]($style)'
 
 [directory]
 style = "fg:#e3e5e5 bg:#769ff0"
@@ -64,12 +71,6 @@ home_symbol = ' '
 "Music" = " "
 "Pictures" = " "
 "Videos" = "󰨜 "
-
-[jobs]
-format = '[$symbol$number ]($style)'
-symbol = '⚙'
-style = "fg:#e3e5e5 bg:#769ff0"
-number_threshold = 1
 
 [git_branch]
 style = "bg:#394260"
@@ -89,6 +90,18 @@ modified = '[!$count](fg:yellow bg:#394260) '
 typechanged = 'T$count '
 staged = '[+$count](fg:green bg:#394260) '
 untracked = '?$count '
+
+[jobs]
+format = '[$symbol$number ]($style)'
+symbol = '⚙'
+style = "fg:#769ff0 bg:#212736"
+number_threshold = 1
+
+[cmd_duration]
+min_time = 3_000  # in milliseconds
+show_milliseconds = true
+style = "fg:#769ff0 bg:#212736"
+format = '[ $duration]($style)'
 
 [package]
 format = '[\[$symbol$version\]]($style)'
