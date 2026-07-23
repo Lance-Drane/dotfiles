@@ -46,6 +46,7 @@
 
 # ignore private files
 *.private
+*.private.*
 
 # repo root
 !/.editorconfig

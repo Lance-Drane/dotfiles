@@ -41,8 +41,8 @@ SAVEHIST=${HISTSIZE}
 HISTFILE="${XDG_STATE_HOME}/zsh/history"
 
 # Common shell files - aliases, functions, themes
-source "${XDG_CONFIG_HOME:=$HOME/.config}/shell/theme-rc"
-source "${XDG_CONFIG_HOME}/shell/common-rc"
+source "${XDG_CONFIG_HOME:=$HOME/.config}/shell/theme-rc.sh"
+source "${XDG_CONFIG_HOME}/shell/common-rc.sh"
 
 autoload -Uz colors && colors
 
@@ -176,7 +176,7 @@ command -v fzf &>/dev/null && {
 }
 
 # prompt
-command -v starship &>/dev/null && eval "$(starship init zsh)"
+command -v starship >/dev/null && eval "$(starship init zsh)"
 
 # Load autosuggestions
 _personal_zsh_autosuggestions_loaded=''

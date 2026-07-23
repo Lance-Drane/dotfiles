@@ -4,9 +4,13 @@ y() {
 	set -- "$@" --cwd-file "$(mktemp -t yazi-cwd.XXXXXX)"
 	command yazi "$@"
 	shift $(($# - 1))
-	set -- "$(command cat < "$1"; printf .; command rm -f -- "$1")"
+	set -- "$(
+		command cat <"$1"
+		printf .
+		command rm -f -- "$1"
+	)"
 	set -- "${1%.}"
-	if [ "$1" != "$PWD" ] && [ -d "$1" ] ; then cd -- "$1" || echo "directory $1 does not exist (was it removed?)"; fi
+	if [ "$1" != "$PWD" ] && [ -d "$1" ]; then cd -- "$1" || printf '%s\n' "directory $1 does not exist (was it removed?)" >&2; fi
 }
 
 # flags to always include with common commands
@@ -52,5 +56,4 @@ alias yt-video='yt-dlp -f bestvideo+bestaudio --embed-chapters --embed-metadata 
 alias yt-music='yt-dlp -f bestaudio -x --embed-thumbnail --embed-metadata --audio-format mp3 --audio-quality 0 -o "%(album_artist)s/%(album)s/%(playlist_index)s_%(title)s.%(ext)s" --parse-metadata "%(album_artist,channel,creator,artist|Unknown)s:%(album_artist)s"'
 alias yt-meta='yt-dlp --embed-metadata --skip-download --write-thumbnail'
 
-[ -f "${XDG_CONFIG_HOME}/shell/common-rc.private" ] && . "${XDG_CONFIG_HOME}/shell/common-rc.private"
-
+[ -f "${XDG_CONFIG_HOME}/shell/common-rc.private.sh" ] && . "${XDG_CONFIG_HOME}/shell/common-rc.private.sh"

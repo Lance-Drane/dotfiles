@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # set up environment variables for the entire login session
 # used for both "display managers" and login shells
 
@@ -107,4 +105,4 @@ export TERMINAL="kitty" # used by xdg-open and some other programs
 #export MAILAPP="$BROWSER" # used by my personal xdg-open script
 
 # private env variables we don't want to commit to version control
-if [ -f "${XDG_CONFIG_HOME}/shell/envs-session.private" ]; then . "${XDG_CONFIG_HOME}/shell/envs-session.private"; fi
+[ -f "${XDG_CONFIG_HOME}/shell/session-envs.private.sh" ] && . "${XDG_CONFIG_HOME}/shell/session-envs.private.sh"

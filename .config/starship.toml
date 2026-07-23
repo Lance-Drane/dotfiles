@@ -19,7 +19,7 @@
 # yellow = "#f1fa8c"
 
 format = """
-$username\
+$user\
 $hostname\
 $directory\
 [](fg:#769ff0 bg:#394260)\
