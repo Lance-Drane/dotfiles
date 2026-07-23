@@ -61,6 +61,8 @@ export PYTHON_HISTORY="${XDG_STATE_HOME}/python/python_history"
 export RUFF_CACHE_DIR="${XDG_CACHE_HOME}/ruff"
 # Java
 export GRADLE_USER_HOME="${XDG_DATA_HOME}/gradle"
+# DotNet
+export DOTNET_CLI_HOME="${XDG_DATA_HOME}/dotnet"
 # NodeJS
 export NPM_CONFIG_CACHE="${XDG_CACHE_HOME}/npm"
 export NPM_CONFIG_INIT_MODULE="${XDG_CONFIG_HOME}/npm/config/npm-init.js"

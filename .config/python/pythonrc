@@ -101,7 +101,8 @@ code - https://github.com/python/cpython/tree/main/Lib/_pyrepl
 config = SimpleNamespace(
     ONE_INDENT="    ",  # what should we use for indentation ?
     HISTFILE=os.getenv(
-        "PYTHON_HISTORY", os.path.expanduser("~/.local/state/python_history")
+        "PYTHON_HISTORY",
+        os.path.expanduser("~/.local/state/python/python_history"),
     ),
     HISTSIZE=-1,
     EDITOR=os.getenv("EDITOR", "vi"),
@@ -154,20 +155,29 @@ class ImprovedCompleter(rlcompleter.Completer):
     def pkg_contents(self, pkg):
         """Given a package name, return a list of it's sub-modules."""
         spec = importlib.util.find_spec(pkg)
-        locs = [spec.origin] if not spec.parent else spec.submodule_search_locations
+        locs = (
+            [spec.origin]
+            if not spec.parent
+            else spec.submodule_search_locations
+        )
         return [
             pkg.name
-            for pkg in pkgutil.walk_packages(locs, f"{pkg}.", onerror=lambda _: None)
+            for pkg in pkgutil.walk_packages(
+                locs, f"{pkg}.", onerror=lambda _: None
+            )
         ]
 
     @cached_property
     def pkglist(self):
-        return frozenset(item.name for item in pkgutil.iter_modules() if item.ispkg)
+        return frozenset(
+            item.name for item in pkgutil.iter_modules() if item.ispkg
+        )
 
     @cached_property
     def modlist(self):
         modlist = chain(
-            sys.builtin_module_names, map(attrgetter("name"), pkgutil.iter_modules())
+            sys.builtin_module_names,
+            map(attrgetter("name"), pkgutil.iter_modules()),
         )
         return frozenset(name for name in modlist if not name.startswith("_"))
 
@@ -213,13 +223,17 @@ class ImprovedCompleter(rlcompleter.Completer):
                 # from pkg.sub import na<tab>
                 match_text = ".".join((namespace, text))
                 if matches := self.startswith_filter(
-                    match_text, self.pkg_contents(pkg), striptext=f"{namespace}."
+                    match_text,
+                    self.pkg_contents(pkg),
+                    striptext=f"{namespace}.",
                 ):
                     return matches
 
             # from module import na<ta>
             mod = importlib.import_module(namespace)
-            return self.startswith_filter(text, getattr(mod, "__all__", dir(mod)))
+            return self.startswith_filter(
+                text, getattr(mod, "__all__", dir(mod))
+            )
 
     def complete(self, text, state, line=None):
         if not line:
@@ -385,7 +399,9 @@ class ImprovedConsole(InteractiveConsole):
 
         def append_history(len_at_start):
             current_len = readline.get_current_history_length()
-            readline.append_history_file(current_len - len_at_start, config.HISTFILE)
+            readline.append_history_file(
+                current_len - len_at_start, config.HISTFILE
+            )
 
         if readline.get_current_history_length() == 0:
             # If no history was loaded, default to .python_history.
@@ -417,12 +433,16 @@ class ImprovedConsole(InteractiveConsole):
         ssh connection.
         """
         prompt_color = green if sys.version_info.major == 2 else yellow
-        sys.ps1 = prompt_color(">=> " if nested else ">>> ", readline_workaround=True)
+        sys.ps1 = prompt_color(
+            ">=> " if nested else ">>> ", readline_workaround=True
+        )
         sys.ps2 = red("... ", readline_workaround=True)
         # - if we are over a remote connection, modify the ps1
         if os.getenv("SSH_CONNECTION"):
             _, _, this_host, _ = os.getenv("SSH_CONNECTION").split()
-            sys.ps1 = prompt_color(f"[{this_host}]>>> ", readline_workaround=True)
+            sys.ps1 = prompt_color(
+                f"[{this_host}]>>> ", readline_workaround=True
+            )
             sys.ps2 = red(f"[{this_host}]... ", readline_workaround=True)
 
     def init_pprint(self):
@@ -440,7 +460,8 @@ class ImprovedConsole(InteractiveConsole):
                 except AttributeError:
                     try:
                         rows, cols = map(
-                            int, subprocess.check_output(["stty", "size"]).split()
+                            int,
+                            subprocess.check_output(["stty", "size"]).split(),
                         )
                     except Exception:
                         cols = 80
@@ -645,7 +666,9 @@ class ImprovedConsole(InteractiveConsole):
 
             try:
                 self.locals["repl_future"] = self.loop.create_task(coro)
-                asyncio.futures._chain_future(self.locals["repl_future"], future)
+                asyncio.futures._chain_future(
+                    self.locals["repl_future"], future
+                )
             except BaseException as exc:
                 future.set_exception(exc)
 
@@ -674,7 +697,9 @@ class ImprovedConsole(InteractiveConsole):
                 name = match.group(1)
                 if name in self.completer.modlist:
                     mod = importlib.import_module(name)
-                    print(grey(f"# imported undefined module: {name}", bold=False))
+                    print(
+                        grey(f"# imported undefined module: {name}", bold=False)
+                    )
                     self.locals[name] = mod
                     return self.runcode(code)
             self.showtraceback()
@@ -705,7 +730,9 @@ class ImprovedConsole(InteractiveConsole):
 
     def _mktemp_buffer(self, lines):
         """Writes lines to a temp file and returns the filename."""
-        with NamedTemporaryFile(mode="w+", suffix=".py", delete=False) as tempbuf:
+        with NamedTemporaryFile(
+            mode="w+", suffix=".py", delete=False
+        ) as tempbuf:
             tempbuf.write("\n".join(lines))
         return tempbuf.name
 
@@ -753,7 +780,9 @@ class ImprovedConsole(InteractiveConsole):
                         self.resetbuffer()
 
             if not quiet:
-                self.write(cyan(f"... {stmt}", bold=(not self._skip_subsequent)))
+                self.write(
+                    cyan(f"... {stmt}", bold=(not self._skip_subsequent))
+                )
 
             if self._skip_subsequent:
                 self.session_history.append(stmt)
@@ -771,7 +800,9 @@ class ImprovedConsole(InteractiveConsole):
         """
         name, _, components = name.partition(".")
         obj = (
-            getattr(namespace, name, namespace) if namespace else self.locals.get(name)
+            getattr(namespace, name, namespace)
+            if namespace
+            else self.locals.get(name)
         )
         return self.lookup(components, obj) if components else obj
 
@@ -940,7 +971,9 @@ class ImprovedConsole(InteractiveConsole):
         retries = 2
         while retries:
             try:
-                super(ImprovedConsole, self).interact(banner=banner, exitmsg=exitmsg)
+                super(ImprovedConsole, self).interact(
+                    banner=banner, exitmsg=exitmsg
+                )
             except SystemExit:
                 # Fixes #2: exit when 'quit()' invoked
                 break
