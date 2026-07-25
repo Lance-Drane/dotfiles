@@ -96,6 +96,10 @@ zstyle ':completion:*:manuals'    separate-sections true
 #zstyle ':completion:*:manuals.*'  insert-sections   true
 zstyle ':completion:*:man:*'      menu yes select
 
+# always have colorized help messages; override --help entirely with a global alias
+# NOTE: breaks batcat's own help! However, can still pipe this to grep/etc.
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+
 # if hosts are listed in ~/.ssh/config , improve completions for ssh
 zstyle ':completion:*:ssh:argument-1:'       tag-order  hosts users
 zstyle ':completion:*:ssh:argument-1:*'      sort       'true'
