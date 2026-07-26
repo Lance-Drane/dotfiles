@@ -8,6 +8,15 @@
 	ui = auto
 [commit]
 	verbose = true
+[core]
+	pager = delta
+[delta]
+	navigate = true  # use n and N to move between diff sections
+	dark = true
+	line-numbers = true
+	side-by-side = true
+	hyperlinks = true
+	hyperlinks-file-link-format = "lazygit-edit://{path}:{line}"
 [diff]
 	algorithm = histogram
 	colorMoved = plain
@@ -20,6 +29,8 @@
 	pruneTags = true
 [help]
 	autocorrect = prompt
+[interactive]
+	diffFilter = delta --color-only
 [init]
 	defaultBranch = main
 [merge]
