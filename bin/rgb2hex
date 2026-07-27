@@ -6,4 +6,4 @@ set -eu
 	echo "usage: $0 <RED> <GREEN> <BLUE>" >&2
 	exit 1
 }
-printf '#%02X%02X%02X\n' "$1" "$2" "$3"
+printf '#%02x%02x%02x\n' "$1" "$2" "$3"
