@@ -21,7 +21,7 @@ parse_args() {
 	fi
 }
 
-if [ $# -eq 0 ] || [ "$1" = '-' ]; then
+if [ $# -eq 0 ] || [ ! -t 0 ]; then
 	read -r input <&0
 	# shellcheck disable=SC2046,SC2086,SC2116  # (deliberate word splitting)
 	parse_args $(echo $input)

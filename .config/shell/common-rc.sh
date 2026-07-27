@@ -1,6 +1,6 @@
 # yazi wrapper which allows using 'q' to change to current working directory when exiting
 # (use 'Q' to stay in directory where yazi was launched)
-y() {
+yazi() {
 	set -- "$@" --cwd-file "$(mktemp -t yazi-cwd.XXXXXX)"
 	command yazi "$@"
 	shift $(($# - 1))
@@ -12,6 +12,7 @@ y() {
 	set -- "${1%.}"
 	if [ "$1" != "$PWD" ] && [ -d "$1" ]; then cd -- "$1" || printf '%s\n' "directory $1 does not exist (was it removed?)" >&2; fi
 }
+alias y='yazi'
 
 # flags to always include with common commands
 alias ls='ls -haN --color=auto --hyperlink --group-directories-first'
