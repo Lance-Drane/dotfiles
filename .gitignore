@@ -7,6 +7,7 @@
 /.config/*
 !/.config/bat/
 !/.config/btop/
+!/.config/eza/
 !/.config/fontconfig/
 !/.config/git/
 /.config/git/credentials # ignore credentials file
