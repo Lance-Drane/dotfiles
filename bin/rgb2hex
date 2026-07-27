@@ -1,19 +1,32 @@
 #!/bin/sh
 
+# handles "R,G,B", "R,G,B,X", "R G B X", "R, G, B", and "R, G, B, X" style arguments. "X" is ignored if it exists.
+
 set -eu
 
-if [ $# -eq 1 ]; then
-	red="${1%%,*}"
-	green="${1#"${red}",}"
-	green="${green%%,*}"
-	blue="${1#"${red}","${green}",}"
-	blue="${blue%%,*}"
-elif [ $# -ge 3 ]; then
-	red="${1%,}"
-	green="${2%,}"
-	blue="${3%,}"
+parse_args() {
+	if [ $# -eq 1 ]; then
+		red="${1%%,*}"
+		green="${1#"${red}",}"
+		green="${green%%,*}"
+		blue="${1#"${red}","${green}",}"
+		blue="${blue%%,*}"
+	elif [ $# -ge 3 ]; then
+		red="${1%,}"
+		green="${2%,}"
+		blue="${3%,}"
+	else
+		echo "usage: $0 <RED>(,)<GREEN>(,)<BLUE>" >&2
+		exit 1
+	fi
+}
+
+if [ $# -eq 0 ]; then
+	read -r input <&0
+	# shellcheck disable=SC2046,SC2086,SC2116  # (deliberate word splitting)
+	parse_args $(echo $input)
 else
-	echo "usage: $0 <RED>(,)<GREEN>(,)<BLUE>" >&2
-	exit 1
+	parse_args "$@"
 fi
+
 printf '#%02x%02x%02x\n' "$red" "$green" "$blue"
