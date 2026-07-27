@@ -2,11 +2,18 @@
 
 set -euo pipefail
 
-if [[ $# -eq 0 ]]; then
+if [[ $# -eq 0 ]] || [[ $1 == '-' ]]; then
 	read -r hex <&0
 else
 	hex="$1"
 fi
 
 hex="${hex#\#}"
-printf '%d %d %d\n' 0x"${hex:0:2}" 0x"${hex:2:2}" 0x"${hex:4:2}"
+if [[ ${#hex} -eq 3 ]]; then
+	printf '%d %d %d\n' 0x"${hex:0:1}${hex:0:1}" 0x"${hex:1:1}${hex:1:1}" 0x"${hex:2:1}${hex:2:1}"
+elif [[ ${#hex} -eq 6 ]]; then
+	printf '%d %d %d\n' 0x"${hex:0:2}" 0x"${hex:2:2}" 0x"${hex:4:2}"
+else
+	echo "usage: $0 <RGB_HEX_STRING>" >&2
+	exit 1
+fi
