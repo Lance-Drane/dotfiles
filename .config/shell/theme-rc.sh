@@ -1,1 +1,1 @@
-themes-rc/dracula.sh
+themes-rc/tokyonight_moon.sh
