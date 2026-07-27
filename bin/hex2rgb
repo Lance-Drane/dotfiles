@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
-# strip out leading '#' if exists
-hex="${1#\#}"
-printf "%d %d %d\n" 0x"${hex:0:2}" 0x"${hex:2:2}" 0x"${hex:4:2}"
+if [[ $# -eq 0 ]]; then
+	read -r hex <&0
+else
+	hex="$1"
+fi
+
+hex="${hex#\#}"
+printf '%d %d %d\n' 0x"${hex:0:2}" 0x"${hex:2:2}" 0x"${hex:4:2}"
