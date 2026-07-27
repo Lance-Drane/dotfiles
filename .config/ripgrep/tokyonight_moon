@@ -1,0 +1,11 @@
+--hidden
+
+--glob
+!.git/*
+
+# Dracula theme for ripgrep - https://draculatheme.com/ripgrep
+--colors=path:fg:0x82,0xaa,0xff
+--colors=line:fg:0xc3,0xe8,0x8d
+--colors=column:fg:0xc3,0xe8,0x8d
+--colors=match:fg:0xff,0x75,0x7f
+
