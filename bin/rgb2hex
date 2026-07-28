@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# handles "R,G,B", "R,G,B,X", "R G B X", "R, G, B", and "R, G, B, X" style arguments. "X" is ignored if it exists.
+# handles "R,G,B", "R,G,B,X", "R G B", "R G B X", "R, G, B", and "R, G, B, X" style arguments. "X" and anything past it is ignored if present.
 
 set -eu
 
@@ -21,7 +21,10 @@ parse_args() {
 	fi
 }
 
-if [ $# -eq 0 ] || [ ! -t 0 ]; then
+# TODO figure out how to mix stdin and args
+if [ ! -t 0 ] && {
+	[ $# -eq 0 ] || [ "$1" = '-' ]
+}; then
 	read -r input <&0
 	# shellcheck disable=SC2046,SC2086,SC2116  # (deliberate word splitting)
 	parse_args $(echo $input)
