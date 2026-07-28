@@ -82,7 +82,7 @@ format = '[($all_status$ahead_behind)(fg:#769ff0 bg:#394260)]($style)'
 ahead = "⇡${count} "
 behind = "⇣${count} "
 diverged  = "⇕⇡${ahead_count}⇣${behind_count} "
-conflicted = '[=$count](fg:pink bg:#394260)) '
+conflicted = '[=$count](fg:pink bg:#394260) '
 stashed = '[\$$count](fg:purple bg:#394260) '
 deleted = '[✘$count](fg:red bg:#394260) '
 renamed = '[»$count](fg:orange bg:#394260) '
