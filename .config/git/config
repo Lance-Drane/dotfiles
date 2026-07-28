@@ -31,6 +31,8 @@
 	autocorrect = prompt
 [interactive]
 	diffFilter = delta --color-only
+[include]
+	path = ~/.config/git/themes/theme.ini
 [init]
 	defaultBranch = main
 [merge]
