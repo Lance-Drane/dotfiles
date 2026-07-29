@@ -201,3 +201,12 @@ unset _personal_zsh_autosuggestions_loaded
 [[ -f /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] && source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# allow reload of ZSHRC through CTRL+5 or sending USR1 signal to the ZSH process
+_dotfiles_reload_zsh() {
+  source "${(%):-%x}"
+  notify-send --app-name ZSH --urgency low --expire-time 2000 --transient "ZSH config reloaded!"
+}
+trap '_dotfiles_reload_zsh' USR1
+zle -N _dotfiles_reload_zsh
+bindkey '^]' _dotfiles_reload_zsh
+
