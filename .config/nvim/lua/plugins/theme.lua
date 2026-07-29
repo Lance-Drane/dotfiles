@@ -1,5 +1,5 @@
 -- if we didn't set the global variable (i.o. error with opening the file), then fail fast
-if DOTFILES_ACTIVE_THEME == nil then
+if not DOTFILES_ACTIVE_THEME then
 	return {}
 end
 
@@ -56,7 +56,7 @@ local THEMES = {
 -- [1] = primary theme, [2] = subtheme
 local theme_tokens = vim.split(DOTFILES_ACTIVE_THEME, "_")
 local theme_function = THEMES[theme_tokens[1]]
-if theme_function == nil then
+if not theme_function then
 	return {}
 end
 return theme_function(theme_tokens[2]) or {}
