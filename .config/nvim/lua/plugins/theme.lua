@@ -1,13 +1,16 @@
--- TODO - find way to dynamically change theme
--- 1) would prefer to symlink a file, but doesn't appear to be possible with Lua imports
--- 2) environment variable? Not easy to change session envs, don't want to rely on .zshrc because might run this from other processes
--- 3) read file with theme name, get theme name, do control flow from that. Can change file pointer with symlink. This is probably best solution
-if true then
+-- if we didn't set the global variable (i.o. error with opening the file), then fail fast
+if DOTFILES_ACTIVE_THEME == nil then
+	return {}
+end
+
+-- THEMES - each theme should take a subtheme argument --
+
+local function tokyonight(subtheme)
 	return {
 		{
 			"tokyonight.nvim",
 			opts = {
-				style = "night",
+				style = subtheme,
 				transparent = true,
 				styles = {
 					sidebars = "transparent",
@@ -22,21 +25,38 @@ if true then
 	}
 end
 
-return {
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		opts = {
-			flavour = "mocha",
-			transparent_background = true,
-			float = {
-				transparent = true,
-				solid = true,
+local function catppuccin(subtheme)
+	return {
+		{
+			"catppuccin/nvim",
+			name = "catppuccin",
+			opts = {
+				flavour = subtheme,
+				transparent_background = true,
+				float = {
+					transparent = true,
+					solid = true,
+				},
 			},
 		},
-	},
-	{
-		"LazyVim/LazyVim",
-		opts = { colorscheme = "catppuccin-nvim" },
-	},
+		{
+			"LazyVim/LazyVim",
+			opts = { colorscheme = "catppuccin-nvim" },
+		},
+	}
+end
+
+-- THEME CONFIGURATION --
+
+local THEMES = {
+	tokyonight = tokyonight,
+	catppuccin = catppuccin,
 }
+
+-- [1] = primary theme, [2] = subtheme
+local theme_tokens = vim.split(DOTFILES_ACTIVE_THEME, "_")
+local theme_function = THEMES[theme_tokens[1]]
+if theme_function == nil then
+	return {}
+end
+return theme_function(theme_tokens[2]) or {}
