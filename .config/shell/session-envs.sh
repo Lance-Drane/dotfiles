@@ -106,8 +106,9 @@ export _JAVA_AWT_WM_NONREPARENTING=1 # fix some Java applications in DWM
 export PATH="${HOME}/bin:${XDG_BIN_HOME}:${PATH}"
 
 # standard applications
-export EDITOR="nvim"    # posix
-export VISUAL="nvim"    # posix
+export VISUAL="nvim"      # posix
+export EDITOR="${VISUAL}" # posix
+export SUDO_EDITOR="${EDITOR}"
 export PAGER="less"     # posix
 export TERMINAL="kitty" # used by xdg-open and some other programs
 #export BROWSER="firefox" # used by xdg-open and some development tools i.e. vite
