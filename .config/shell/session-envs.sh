@@ -54,6 +54,12 @@ export PATH="${GOPATH}/bin:${PATH}"
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export PATH="${CARGO_HOME}/bin:${PATH}" # for binaries with "cargo install"
+# C++
+export CONAN_USER_HOME="${XDG_CONFIG_HOME}/conan"
+# Julia
+export JULIA_DEPOT_PATH="${XDG_DATA_HOME}/julia:$JULIA_DEPOT_PATH"
+export JULIAUP_DEPOT_PATH="${XDG_DATA_HOME}/julia"
+export JULIA_HISTORY="${XDG_STATE_HOME}/julia/repl_history.jl"
 # Python
 export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/pythonrc"
 export PYTHON_HISTORY="${XDG_STATE_HOME}/python/python_history"
@@ -78,7 +84,7 @@ export RBENV_ROOT="${XDG_DATA_HOME}/rbenv"
 export GEM_HOME="${XDG_DATA_HOME}/gems"
 export GEM_PATH="${GEM_HOME}"
 export PATH="${GEM_HOME}/bin:${PATH}"
-# SQLite
+# SQLit
 export SQLITE_HISTORY="${XDG_STATE_HOME}/sqlite_history"
 # Postgres
 export PSQL_HISTORY="${XDG_STATE_HOME}/psql_history"
