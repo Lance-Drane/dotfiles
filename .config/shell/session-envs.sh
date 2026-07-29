@@ -31,6 +31,7 @@ export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/config"
 export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
 export LESSHISTFILE="${XDG_STATE_HOME}/lesshst" # this can be removed once all my computers use Less version >= 598
+export FFMPEG_DATADIR="${XDG_CONFIG_HOME}/ffmpeg"
 # ZSH - note that this does not handle zprofile, only zshrc; also note that using this with zshenv is probably a bad idea
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 # Ansible
@@ -81,6 +82,8 @@ export PATH="${GEM_HOME}/bin:${PATH}"
 export SQLITE_HISTORY="${XDG_STATE_HOME}/sqlite_history"
 # Postgres
 export PSQL_HISTORY="${XDG_STATE_HOME}/psql_history"
+# MySQL
+export MYSQL_HISTFILE="${XDG_DATA_HOME}/mysql_history"
 # Cuda
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
 # Codex
