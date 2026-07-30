@@ -35,6 +35,9 @@ unsetopt list_types
 unsetopt prompt_bang
 unsetopt prompt_subst
 
+zmodload zsh/complist
+autoload -Uz add-zsh-hook
+
 # History
 HISTSIZE=8192
 SAVEHIST=${HISTSIZE}
@@ -58,9 +61,6 @@ zstyle ':completion:*' rehash true  # rehash automatically if adding new executa
 zstyle ':completion:*' sort false  # sort options appear in the order defined in the completion file
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*:*:-command-:*' group-order builtins functions aliases commands
-
-zmodload zsh/complist
-autoload -Uz add-zsh-hook
 
 # colored completion listings, see "Standard Tags" section of "man zshcompsys" | https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Standard-Tags
 zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
@@ -200,16 +200,18 @@ unset _personal_zsh_autosuggestions_loaded
 [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # allow reload of ZSHRC through CTRL+5 or sending USR1 signal to the ZSH process
-_dotfiles_reload_zsh() {
+TRAPUSR1() {
+  # this print statement is removed with the keypress (after the time it takes to resource the ZSH file) but not the signal kill, which works well
+  # the prompt goes down a bit each time the keypress happens (and for terminals which did not send the signal themselves), but not a big deal ATM
+  print "Reloading ZSH config"
   source "${(%):-%x}"
-  notify-send --app-name ZSH --urgency low --expire-time 2000 --transient "ZSH config reloaded!"
+  zle && zle reset-prompt
 }
-trap '_dotfiles_reload_zsh' USR1
-zle -N _dotfiles_reload_zsh
-bindkey '^]' _dotfiles_reload_zsh
+zle -N TRAPUSR1
+bindkey '^]' TRAPUSR1
 
-# if we start in a directory with a .venv, auto-source it
-[[ -f .venv/bin/activate ]] && source .venv/bin/activate
+# if we start in a directory with a .venv and we aren't already in a venv, auto-source it
+[[ -f .venv/bin/activate ]] && [[ -z "$VIRTUAL_ENV" ]] && source .venv/bin/activate
 
 # force script to have a 0 return code
 true

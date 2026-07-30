@@ -21,6 +21,7 @@
 !/.config/ripgrep/
 !/.config/rmpc/
 !/.config/shell/
+!/.config/starship/
 !/.config/starship.toml
 !/.config/tmux/
 !/.config/user-dirs.dirs

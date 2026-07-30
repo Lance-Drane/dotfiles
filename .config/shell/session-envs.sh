@@ -34,6 +34,8 @@ export LESSHISTFILE="${XDG_STATE_HOME}/lesshst" # this can be removed once all m
 export FFMPEG_DATADIR="${XDG_CONFIG_HOME}/ffmpeg"
 # ZSH - note that this does not handle zprofile, only zshrc; also note that using this with zshenv is probably a bad idea
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
+# Starship
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
 # Ansible
 export ANSIBLE_HOME="${XDG_DATA_HOME}/ansible"
 # AWS
