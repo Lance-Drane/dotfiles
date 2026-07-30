@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Sets up supplementary dependencies which are not caught in package manager
+# This script is meant to be idempotent when you run it.
+
+set -eu
+
+if [ "$(id -u)" = '0' ]; then
+	echo "don't run bootstrap script as root" >&2
+	exit 1
+fi
+
+# make sure Yazi plugins are installed
+if command -v yazi.ya >/dev/null; then
+	yazi.ya pkg install
+else
+	ya pkg install
+fi

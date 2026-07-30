@@ -26,6 +26,8 @@
 !/.config/user-dirs.dirs
 !/.config/user-dirs.locale
 !/.config/yazi/
+# use package.toml as source of truth and install in bootstrap
+/.config/yazi/plugins/*
 !/.config/yt-dlp/
 !/.config/zathura/
 !/.config/zsh/
