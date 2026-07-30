@@ -154,8 +154,6 @@ zle-line-init() {
     echo -ne "\e[5 q"
 }
 zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line && zle -N edit-command-line
@@ -209,4 +207,10 @@ _dotfiles_reload_zsh() {
 trap '_dotfiles_reload_zsh' USR1
 zle -N _dotfiles_reload_zsh
 bindkey '^]' _dotfiles_reload_zsh
+
+# if we start in a directory with a .venv, auto-source it
+[[ -f .venv/bin/activate ]] && source .venv/bin/activate
+
+# force script to have a 0 return code
+true
 
