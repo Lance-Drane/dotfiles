@@ -141,19 +141,19 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect '^xi' vi-insert  # Ctrl+x , i - switch to interactive mode in completion menu
 
 # # Change cursor shape for different vi modes.
-function zle-keymap-select {
-    case $KEYMAP in
-	vicmd) echo -ne '\e[1 q';;      # block
-	viins|main) echo -ne '\e[5 q';; # beam
-    esac
-}
-zle_highlight=('paste:none')
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
+function zle-keymap-select zle-line-init {
+	case $KEYMAP in
+ 		vicmd) echo -ne '\e[1 q';;      # block
+ 		viins|main) echo -ne '\e[5 q';; # beam
+	esac
+
+	zle reset-prompt
+	zle -R
 }
 zle -N zle-line-init
+zle -N zle-keymap-select
+
+zle_highlight=('paste:none')
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line && zle -N edit-command-line
@@ -167,14 +167,14 @@ bindkey -M visual '^[[3~' vi-delete
 # ALT + C - cd into selected directory
 # CTRL + T - paste selected file path(s) into command line
 command -v fzf &>/dev/null && {
-  if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
-    source /usr/share/fzf/key-bindings.zsh
-    source /usr/share/fzf/completion.zsh
-  else
-    source <(fzf --zsh)
-  fi
-  # CTRL + G , then '?' , gives the keybinding list
-  source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lib/fzf-git.sh"
+	if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+		source /usr/share/fzf/key-bindings.zsh
+		source /usr/share/fzf/completion.zsh
+	else
+		source <(fzf --zsh)
+	fi
+	# CTRL + G , then '?' , gives the keybinding list
+	source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lib/fzf-git.sh"
 }
 
 # prompt
@@ -183,29 +183,33 @@ command -v starship >/dev/null && eval "$(starship init zsh)"
 # Load autosuggestions
 _personal_zsh_autosuggestions_loaded=''
 if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  _personal_zsh_autosuggestions_loaded='1'
-  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	_personal_zsh_autosuggestions_loaded='1'
+	source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  _personal_zsh_autosuggestions_loaded='1'
-  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+	_personal_zsh_autosuggestions_loaded='1'
+	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 [[ -n $_personal_zsh_autosuggestions_loaded ]] && {
-  bindkey '^ ' autosuggest-accept  # Ctrl + Space - accepts the suggestion, but does not execute
-  ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # autosuggest history first, then try a completion
+	bindkey '^ ' autosuggest-accept  # Ctrl + Space - accepts the suggestion, but does not execute
+	ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # autosuggest history first, then try a completion
 }
 unset _personal_zsh_autosuggestions_loaded
 
 # Load syntax highlighting; must be after everything else.
 [[ -f /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] && source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# this library causes memory leaks and slowdown if sourced multiple times, so guard against this
+[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && [[ -z "$ZSH_HIGHLIGHTING_INITIALIZED" ]] && {
+	source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+	ZSH_HIGHLIGHTING_INITIALIZED="1"
+}
 
 # allow reload of ZSHRC through CTRL+5 or sending USR1 signal to the ZSH process
 TRAPUSR1() {
-  # this print statement is removed with the keypress (after the time it takes to resource the ZSH file) but not the signal kill, which works well
-  # the prompt goes down a bit each time the keypress happens (and for terminals which did not send the signal themselves), but not a big deal ATM
-  print "Reloading ZSH config"
-  source "${(%):-%x}"
-  zle && zle reset-prompt
+	# this print statement is removed with the keypress (after the time it takes to resource the ZSH file) but not the signal kill, which works well
+	# the prompt goes down a bit each time the keypress happens (and for terminals which did not send the signal themselves), but not a big deal ATM
+	print "Reloading ZSH config"
+	source "${(%):-%x}"
+	zle && zle reset-prompt
 }
 zle -N TRAPUSR1
 bindkey '^]' TRAPUSR1
