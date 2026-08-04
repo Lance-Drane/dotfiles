@@ -1,3 +1,4 @@
+-- "g/" for an easier find/replace tool using ripgrep
 return {
 	"chrisgrieser/nvim-rip-substitute",
 	keys = {
