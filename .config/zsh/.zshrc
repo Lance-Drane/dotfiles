@@ -36,6 +36,7 @@ unsetopt prompt_bang
 unsetopt prompt_subst
 
 zmodload zsh/complist
+zmodload zsh/terminfo
 autoload -Uz add-zsh-hook
 
 # History
@@ -123,14 +124,59 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 # export ZVM_READKEY_ENGINE=zle
 export KEYTIMEOUT=200  # hundreths of a second
 
-# general terminal keybindings
-bindkey '^[[H' beginning-of-line # Home key
-bindkey '^[[F' end-of-line # End key
-bindkey '^[[3~' delete-char # Del key
-bindkey '^[[1;5C' forward-word # Ctrl + right arrow
-bindkey '^[[1;5D' backward-word # Ctrl + left arrow
-bindkey '^H' backward-kill-word # Ctrl + Backspace OR Ctrl + H
-bindkey '^[[3;5~' kill-word # Ctrl + Delete
+### general terminal keybindings ###
+# Backspace (vi-mode disallows going past end of line)
+bindkey -M emacs '^?' backward-delete-char
+bindkey -M viins '^?' backward-delete-char
+bindkey -M vicmd '^?' vi-backward-char
+# Home
+bindkey -M emacs '^[[H' beginning-of-line
+bindkey -M viins '^[[H' vi-beginning-of-line
+bindkey -M vicmd '^[[H' vi-beginning-of-line
+# End
+bindkey -M emacs '^[[F' end-of-line
+bindkey -M viins '^[[F' vi-end-of-line
+bindkey -M emacs '^[[F' vi-end-of-line
+# Insert (vi-mode disallows going past end of line)
+bindkey -M emacs '^[[2' overwrite-mode
+bindkey -M viins '^[[2' overwrite-mode
+bindkey -M vicmd '^[[2' vi-insert
+# Delete (vi-mode disallows going past end of line)
+bindkey -M emacs '^[[3~' delete-char
+bindkey -M viins '^[[3~' delete-char
+bindkey -M vicmd '^[[3~' vi-delete-char
+# Up
+bindkey -M emacs '^[[A' up-line-or-history
+bindkey -M viins '^[[A' up-line-or-history
+bindkey -M vicmd '^[[A' vi-up-line-or-history
+# Down
+bindkey -M emacs '^[[B' down-line-or-history
+bindkey -M viins '^[[B' down-line-or-history
+bindkey -M vicmd '^[[B' vi-down-line-or-history
+# Left
+bindkey -M emacs '^[[D' backward-char
+bindkey -M viins '^[[D' vi-backward-char
+bindkey -M vicmd '^[[D' vi-backward-char
+# Right
+bindkey -M emacs '^[[C' forward-char
+bindkey -M viins '^[[C' vi-forward-char
+bindkey -M vicmd '^[[C' vi-forward-char
+# Ctrl + Right
+bindkey -M emacs '^[[1;5C' forward-word
+bindkey -M viins '^[[1;5C' forward-word
+bindkey -M vicmd '^[[1;5C' vi-forward-word
+# Ctrl + Left
+bindkey -M emacs '^[[1;5D' backward-word
+bindkey -M viins '^[[1;5D' backward-word
+bindkey -M vicmd '^[[1;5D' vi-backward-word
+# Ctrl + Backspace AND Ctrl + H
+bindkey -M emacs '^H' backward-kill-word
+bindkey -M viins '^H' backward-kill-word
+bindkey -M vicmd '^H' vi-backward-kill-word
+# Ctrl + Delete
+bindkey -M emacs '^[[3;5~' kill-word
+bindkey -M viins '^[[3;5~' kill-word
+bindkey -M vicmd '^[[3;5~' kill-word
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
