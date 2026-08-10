@@ -77,7 +77,7 @@ export NPM_CONFIG_TMP="${XDG_RUNTIME_DIR}/npm"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 export NODE_REPL_HISTORY="${XDG_STATE_HOME}/node_repl_history"
 export PNPM_HOME="${XDG_DATA_HOME}/pnpm"
-export PATH="${PNPM_HOME}:${PATH}"
+export PATH="${PNPM_HOME}/bin:${PATH}"
 # Ruby
 export BUNDLE_USER_CONFIG="${XDG_CONFIG_HOME}/bundle"
 export BUNDLE_USER_CACHE="${XDG_CACHE_HOME}/bundle"
