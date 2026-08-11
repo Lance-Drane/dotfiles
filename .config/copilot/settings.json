@@ -30,5 +30,11 @@
       "Shell(git show-ref *)",
       "Shell(git status *)"
     ]
+  },
+  "footer": {
+    "showQuota": true,
+    "showAiUsed": true,
+    "showAgent": true,
+    "showModelEffort": true
   }
 }
