@@ -1,7 +1,12 @@
 {
   "allowedUrls": [
     "*.github.com",
-    "*.githubusercontent.com"
+    "*.githubusercontent.com",
+    "*.readthedocs.io",
+    "*.python.org",
+    "pypi.org",
+    "*.rust-lang.org",
+    "docs.rs"
   ],
   "mergeStrategy": "rebase",
   "showReasoning": true,
@@ -39,6 +44,17 @@
     "showQuota": true,
     "showAiUsed": true,
     "showAgent": true,
-    "showModelEffort": true
+    "showModelEffort": true,
+    "showCodeChanges": true,
+    "showContextWindow": true,
+    "showYolo": true,
+    "showBranch": true,
+    "showCiStatus": true,
+    "showCustom": true,
+    "showDirectory": true,
+    "showPullRequest": true,
+    "showSandbox": true,
+    "showSchedules": true,
+    "showUsername": false
   }
 }
