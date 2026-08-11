@@ -85,8 +85,8 @@
       "Shell(cargo test:*)",
       "Shell(cargo tree:*)",
       "Shell(cargo version:*)",
-      "Write(/tmp/*)",
-      "Edit(/tmp/*)"
+      "Write(//tmp/*)",
+      "Edit(//tmp/*)"
     ]
   },
   "footer": {
