@@ -23,6 +23,9 @@
 	mnemonicPrefix = true
 	renames = true
 	submodule = log
+	tool = nvimdiff
+[difftool]
+	prompt = false
 [fetch]
 	all = true
 	prune = true
@@ -42,6 +45,10 @@
 	defaultBranch = main
 [merge]
 	conflictstyle = zdiff3
+	tool = nvimdiff
+[mergetool]
+	keepBackup = false
+	prompt = false
 [pull]
 	rebase = true
 [push]
