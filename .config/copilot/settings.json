@@ -21,6 +21,7 @@
       "Shell(cut:*)",
       "Shell(diff:*)",
       "Shell(dirname:*)",
+      "Shell(du:*)",
       "Shell(echo:*)",
       "Shell(false)",
       "Shell(file:*)",
