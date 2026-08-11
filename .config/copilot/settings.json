@@ -8,8 +8,8 @@
   "permissions": {
     "allow": [
       "Read(**)",
-      "Write(/tmp/copilot_*/**)",
-      "Edit(/tmp/copilot_*/**)",
+      "Write(/tmp/**)",
+      "Edit(/tmp/**)",
       "Shell(cat *)",
       "Shell(echo *)",
       "Shell(find *)",
@@ -24,7 +24,11 @@
       "Shell(tree *)",
       "Shell(git branch *)",
       "Shell(git diff *)",
+      "Shell(git grep *)",
       "Shell(git log *)",
+      "Shell(git ls-files *)",
+      "Shell(git ls-remote *)",
+      "Shell(git ls-tree *)",
       "Shell(git rev-parse *)",
       "Shell(git show *)",
       "Shell(git show-ref *)",
