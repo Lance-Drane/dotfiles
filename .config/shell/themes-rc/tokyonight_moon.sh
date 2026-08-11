@@ -52,3 +52,5 @@ export LS_COLORS="rs=0:mi=00:su=${DF_THEME_SETUID}:sg=${DF_THEME_SETGID}:ca=${DF
 # mt = match , fn = filename, ln = line number, bn = byte offset, se=separators
 export GREP_COLORS='mt=1;38;2;255;117;127:fn=38;2;192;153;255:ln=38;2;195;232;141:bn=38;2;195;232;141:se=38;2;101;188;255'
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --color=fg:#c8d3f5,bg:#1e2030,hl:#65bcff --color=fg+:#c8d3f5,bg+:#2d3f76,hl+:#65bcff --color=border:#589ed7,gutter:#1e2030,header:#ff966c,info:#545c7e,marker:#ff007c,pointer:#ff007c,prompt:#65bcff,query:#c8d3f5:regular,scrollbar:#589ed7,separator:#ff966c,spinner:#ff007c"
+# null, false, true, number, string, array, object, object key
+export JQ_COLORS="0;90:0;31:0;32:0;33:0;36:1;35:1;35:1;34"

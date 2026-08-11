@@ -52,3 +52,5 @@ export EZA_COLORS='uu=36:uR=31:un=35:gu=37:da=2;34:ur=34:uw=95:ux=36:ue=36:gr=34
 # mt = match , fn = filename, ln = line number, bn = byte offset, se=separators
 export GREP_COLORS='mt=1;38;2;255;85;85:fn=38;2;255;121;198:ln=38;2;80;250;123:bn=38;2;80;250;123:se=38;2;139;233;253'
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4"
+# null, false, true, number, string, array, object, object key
+export JQ_COLORS="0;90:0;31:0;32:0;33:0;36:1;35:1;35:1;34"
