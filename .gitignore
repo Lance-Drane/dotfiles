@@ -7,6 +7,9 @@
 /.config/*
 !/.config/bat/
 !/.config/btop/
+!/.config/copilot/
+/.config/copilot/*
+!/.config/copilot/settings.json
 !/.config/eza/
 !/.config/fontconfig/
 !/.config/git/

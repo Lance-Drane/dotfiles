@@ -1,0 +1,34 @@
+{
+  "allowedUrls": [
+    "*.github.com",
+    "*.githubusercontent.com"
+  ],
+  "mergeStrategy": "rebase",
+  "showReasoning": true,
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Write(/tmp/copilot_*/**)",
+      "Edit(/tmp/copilot_*/**)",
+      "Shell(cat *)",
+      "Shell(echo *)",
+      "Shell(find *)",
+      "Shell(grep *)",
+      "Shell(head *)",
+      "Shell(ls *)",
+      "Shell(pwd)",
+      "Shell(tail *)",
+      "Shell(wc *)",
+      "Shell(which *)",
+      "Shell(rg *)",
+      "Shell(tree *)",
+      "Shell(git branch *)",
+      "Shell(git diff *)",
+      "Shell(git log *)",
+      "Shell(git rev-parse *)",
+      "Shell(git show *)",
+      "Shell(git show-ref *)",
+      "Shell(git status *)"
+    ]
+  }
+}
