@@ -7,6 +7,9 @@
 /.config/*
 !/.config/bat/
 !/.config/btop/
+!/.config/claude/
+/.config/claude/*
+!/.config/claude/settings.json
 !/.config/copilot/
 /.config/copilot/*
 !/.config/copilot/settings.json

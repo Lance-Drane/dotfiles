@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "defaultMode": "default"
+  },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "enableArtifact": false,
+  "askUserQuestionTimeout": "never",
+  "theme": "dark",
+  "editorMode": "vim",
+  "verbose": false,
+  "preferredNotifChannel": "auto",
+  "autoCompactEnabled": true,
+  "switchModelsOnFlag": true,
+  "fileCheckpointingEnabled": true,
+  "showTurnDuration": true,
+  "terminalProgressBarEnabled": true,
+  "inputNeededNotifEnabled": false,
+  "agentPushNotifEnabled": false,
+  "useAutoModeDuringPlan": true
+}
