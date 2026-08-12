@@ -36,5 +36,5 @@ target/
 node_modules/
 dist/
 
-
+# AI files
 **/.claude/settings.local.json
