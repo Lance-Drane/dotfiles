@@ -125,10 +125,22 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 export KEYTIMEOUT=200  # hundreths of a second
 
 ### general terminal keybindings ###
-# Backspace (vi-mode disallows going past end of line)
-bindkey -M emacs '^?' backward-delete-char
+
+# remove all characters between cursor and end of line
+function zle_forward_kill_line() {
+  BUFFER=${BUFFER:0:$CURSOR}
+}
+zle -N zle_forward_kill_line
+
+# remove all characters between cursor and beginning of line
+function zle_backward_kill_line() {
+  BUFFER=${BUFFER:$CURSOR:$#BUFFER}
+  CURSOR=0
+}
+zle -N zle_backward_kill_line
+
+# Backspace (fixes this getting stuck in viins)
 bindkey -M viins '^?' backward-delete-char
-bindkey -M vicmd '^?' vi-backward-char
 # Home
 bindkey -M emacs '^[[H' beginning-of-line
 bindkey -M viins '^[[H' vi-beginning-of-line
@@ -146,20 +158,12 @@ bindkey -M emacs '^[[3~' delete-char
 bindkey -M viins '^[[3~' delete-char
 bindkey -M vicmd '^[[3~' vi-delete-char
 # Up
-bindkey -M emacs '^[[A' up-line-or-history
-bindkey -M viins '^[[A' up-line-or-history
-bindkey -M vicmd '^[[A' vi-up-line-or-history
+bindkey -M vicmd '^[[A' up-line-or-history
 # Down
-bindkey -M emacs '^[[B' down-line-or-history
-bindkey -M viins '^[[B' down-line-or-history
-bindkey -M vicmd '^[[B' vi-down-line-or-history
-# Left
-bindkey -M emacs '^[[D' backward-char
-bindkey -M viins '^[[D' vi-backward-char
+bindkey -M vicmd '^[[B' down-line-or-history
+# Left, don't change lines in vicmd
 bindkey -M vicmd '^[[D' vi-backward-char
-# Right
-bindkey -M emacs '^[[C' forward-char
-bindkey -M viins '^[[C' vi-forward-char
+# Right, don't change lines in vicmd
 bindkey -M vicmd '^[[C' vi-forward-char
 # Ctrl + Right
 bindkey -M emacs '^[[1;5C' forward-word
@@ -177,6 +181,16 @@ bindkey -M vicmd '^H' vi-backward-kill-word
 bindkey -M emacs '^[[3;5~' kill-word
 bindkey -M viins '^[[3;5~' kill-word
 bindkey -M vicmd '^[[3;5~' kill-word
+# Ctrl + <KEY> - normal editing
+bindkey -M viins '^A' beginning-of-line
+bindkey -M viins '^E' end-of-line
+bindkey -M viins '^B' backward-char
+bindkey -M viins '^F' forward-char
+bindkey -M viins '^K' zle_forward_kill_line
+bindkey -M viins '^W' backward-kill-word
+bindkey -M viins '^U' zle_backward_kill_line
+bindkey -M viins '^Y' yank
+bindkey -M viins '^_' undo
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
@@ -203,7 +217,7 @@ zle_highlight=('paste:none')
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line && zle -N edit-command-line
-bindkey '^e' edit-command-line
+#bindkey -M viins '^e' edit-command-line
 bindkey -M vicmd '^[[3~' vi-delete-char
 bindkey -M vicmd '^e' edit-command-line
 bindkey -M visual '^[[3~' vi-delete
@@ -236,7 +250,7 @@ elif [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]
 	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 [[ -n $_personal_zsh_autosuggestions_loaded ]] && {
-	bindkey '^ ' autosuggest-accept  # Ctrl + Space - accepts the suggestion, but does not execute
+	bindkey '^@' autosuggest-accept  # Ctrl + Space - accepts the suggestion, but does not execute
 	ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # autosuggest history first, then try a completion
 }
 unset _personal_zsh_autosuggestions_loaded
