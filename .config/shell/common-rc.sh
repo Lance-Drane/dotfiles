@@ -15,7 +15,7 @@ yazi() {
 alias y='yazi'
 
 # flags to always include with common commands
-alias ls='ls -haN --color=auto --hyperlink --group-directories-first'
+alias ls='ls -haN --color=auto --hyperlink=auto --group-directories-first'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -32,7 +32,12 @@ alias nohup="nohup "
 
 # fix stupid variance between binary names across different Linux distros
 command -v batcat >/dev/null && alias bat='batcat'
-command -v fdfind >/dev/null && alias fd='fdfind'
+if command -v fdfind >/dev/null; then
+	alias fdfind='fdfind --hyperlink=auto'
+	alias fd='fdfind'
+else
+	alias fd='fd --hyperlink=auto'
+fi
 
 # directory simplification
 alias ..='cd ..'
@@ -45,8 +50,13 @@ alias .......='cd ../../../../../../'
 # $HOME cleanup
 alias nvidia-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 
-# Make sure kitty can still ssh
-[ "$TERM" = "xterm-kitty" ] && alias ssh="kitten ssh"
+# configure kitty extensions
+[ "$TERM" = "xterm-kitty" ] && {
+	# Make sure kitty can still ssh
+	alias ssh="kitten ssh"
+	# note that rg only gives hyperlinks for the numbers but allows hyperlinks in the rest of the line, kitty forces the whole line to link to the file
+	alias rg="rg --hyperlink-format=kitty"
+}
 
 ### CUSTOM ALIASES ###
 
