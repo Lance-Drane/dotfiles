@@ -1,3 +1,5 @@
+### This file is meant to have common configuration across all POSIX shells. It gets sourced early in the main RC file but after the theme file.
+
 # yazi wrapper which allows using 'q' to change to current working directory when exiting
 # (use 'Q' to stay in directory where yazi was launched)
 yazi() {
@@ -30,14 +32,13 @@ alias bc='bc -lq'
 # set up nohup so it can deal with an argument that is an alias name - from POSIX 'alias' page examples
 alias nohup="nohup "
 
-# fix stupid variance between binary names across different Linux distros
-command -v batcat >/dev/null && alias bat='batcat'
-if command -v fdfind >/dev/null; then
-	alias fdfind='fdfind --hyperlink=auto'
-	alias fd='fdfind'
-else
-	alias fd='fd --hyperlink=auto'
-fi
+# FD, remember to never use the ubuntu version because it's out of date and is called 'fdfind'
+alias fd='fd --hyperlink=auto'
+
+# FZF
+export FZF_CTRL_R_OPTS="--bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' --color header:italic --header 'Press CTRL-Y to copy command into clipboard'"
+export FZF_ALT_C_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'tree -C {}'"
+export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
 # directory simplification
 alias ..='cd ..'
