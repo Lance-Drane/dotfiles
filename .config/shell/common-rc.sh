@@ -33,7 +33,7 @@ alias bc='bc -lq'
 alias nohup="nohup "
 
 # FD, remember to never use the ubuntu version because it's out of date and is called 'fdfind'
-alias fd='fd --hyperlink=auto'
+alias fd='fd --hyperlink=auto --hidden --exclude .git --exclude node_modules --exclude .venv --exclude target'
 
 # FZF
 export FZF_CTRL_R_OPTS="--bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' --color header:italic --header 'Press CTRL-Y to copy command into clipboard'"
