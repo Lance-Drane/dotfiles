@@ -46,7 +46,7 @@ esac
 
 # not sure if I'd ever use MUSL but noting this here
 if ldd --version 2>&1 | grep -Fqi 'musl'; then
-	echo "can't handle muslc installs yet, some packages don't have a muslc .deb"
+	echo "can't handle muslc installs yet, some packages don't have a muslc .deb" >&2
 	exit 1
 fi
 
