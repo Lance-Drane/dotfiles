@@ -66,6 +66,7 @@ export JULIA_HISTORY="${XDG_STATE_HOME}/julia/repl_history.jl"
 export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/pythonrc"
 export PYTHON_HISTORY="${XDG_STATE_HOME}/python/python_history"
 export RUFF_CACHE_DIR="${XDG_CACHE_HOME}/ruff"
+export MYPY_CACHE_DIR="${XDG_CACHE_HOME}/mypy"
 # Java
 export GRADLE_USER_HOME="${XDG_DATA_HOME}/gradle"
 # DotNet
