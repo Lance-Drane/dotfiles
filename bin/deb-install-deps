@@ -1,0 +1,60 @@
+#!/bin/sh
+
+set -eu
+
+# Debian and its derivatives are notorious for having out-of-date packages, especially if you are cursed to be on an LTS version. (Such things are inexplicably required by IT departments.)
+# Thankfully, many software maintainers release .deb packages on their Github releases page.
+
+tmpprefix="/tmp/df-deb-install-deps"
+# no args = handle parallelization of the script
+if [ "$#" -eq 0 ]; then
+	# $1 = owner/repository
+	# $2 = binary release name
+	echo "junegunn/fzf
+sharkdp/bat
+dandavison/delta
+sharkdp/fd
+BurntSushi/ripgrep" | xargs -n1 -P5 "$0"
+	# cannot parallelize dpkg installation
+	rc=0
+	for f in "${tmpprefix}"*; do
+		if sudo dpkg -i "$f"; then
+			echo "installed $f" >&2
+			rm "$f"
+		else
+			echo "ERROR: Could not install $f , you can try again by running 'sudo dpkg -i $f'" >&2
+			rc=1
+		fi
+	done
+	exit $rc
+fi
+
+# this part of the script runs in parallel until we place the .deb in the TMP directory
+cputype="$(uname -m)"
+case "$cputype" in
+x86_64 | x86-64 | x64 | amd64)
+	cputype='amd64'
+	;;
+	# TODO: arm64 releases don't always have a .deb , I can check this later
+	#aarch64 | arm64)
+	#cputype='arm64'
+	#;;
+*)
+	echo "can't handle CPU type $cputype" >&2
+	exit 1
+	;;
+esac
+
+# not sure if I'd ever use MUSL but noting this here
+if ldd --version 2>&1 | grep -Fqi 'musl'; then
+	echo "can't handle muslc installs yet, some packages don't have a muslc .deb"
+	exit 1
+fi
+
+repo="$1"
+dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r '[.assets.[].browser_download_url][] | select(endswith("amd64.deb") and (contains("musl") | not))')
+fname="$(basename "$dl_url")"
+tmppath="${tmpprefix}${fname}"
+
+curl -fsSL "$dl_url" >"$tmppath"
+echo "acquired deb for $repo" >&2
