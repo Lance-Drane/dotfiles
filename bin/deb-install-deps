@@ -9,7 +9,6 @@ tmpprefix="/tmp/df-deb-install-deps"
 # no args = handle parallelization of the script
 if [ "$#" -eq 0 ]; then
 	# $1 = owner/repository
-	# $2 = binary release name
 	echo "junegunn/fzf
 sharkdp/bat
 dandavison/delta
