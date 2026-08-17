@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -eu
+# don't set -e yet because we can allow parts of the xargs parallelization to fail
+set -u
 
 # Debian and its derivatives are notorious for having out-of-date packages, especially if you are cursed to be on an LTS version. (Such things are inexplicably required by IT departments.)
 # Thankfully, many software maintainers release .deb packages on their Github releases page.
@@ -29,6 +30,8 @@ BurntSushi/ripgrep" | xargs -n1 -P5 "$0"
 fi
 
 # this part of the script runs in parallel until we place the .deb in the TMP directory
+set -e
+
 cputype="$(uname -m)"
 case "$cputype" in
 x86_64 | x86-64 | x64 | amd64)
