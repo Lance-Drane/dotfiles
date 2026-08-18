@@ -87,12 +87,12 @@ export RBENV_ROOT="${XDG_DATA_HOME}/rbenv"
 export GEM_HOME="${XDG_DATA_HOME}/gems"
 export GEM_PATH="${GEM_HOME}"
 export PATH="${GEM_HOME}/bin:${PATH}"
-# SQLit
-export SQLITE_HISTORY="${XDG_STATE_HOME}/sqlite_history"
+# SQLite
+export SQLITE_HISTORY="${XDG_STATE_HOME}/sqlite/history"
 # Postgres
-export PSQL_HISTORY="${XDG_STATE_HOME}/psql_history"
+export PSQL_HISTORY="${XDG_STATE_HOME}/psql/history"
 # MySQL
-export MYSQL_HISTFILE="${XDG_DATA_HOME}/mysql_history"
+export MYSQL_HISTFILE="${XDG_STATE_HOME}/mysql/history"
 # Cuda
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
 # Codex
