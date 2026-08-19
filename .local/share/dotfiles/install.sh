@@ -24,4 +24,4 @@ else
 	printf '%s' "$BACKUPS" | xargs -I{} mv "$HOME"/{} "${DOTFILES_BACKUP_DIR}"/{}
 	dotfiles checkout
 fi
-dotfiles config status.showUntrackedFiles no
+dotfiles config --local status.showUntrackedFiles no
