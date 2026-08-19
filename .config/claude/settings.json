@@ -6,6 +6,14 @@
     "baseRef": "fresh"
   },
   "enableArtifact": false,
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
+  },
   "askUserQuestionTimeout": "never",
   "theme": "dark",
   "editorMode": "vim",
@@ -18,5 +26,8 @@
   "terminalProgressBarEnabled": true,
   "inputNeededNotifEnabled": false,
   "agentPushNotifEnabled": false,
-  "useAutoModeDuringPlan": true
+  "useAutoModeDuringPlan": true,
+  "enabledPlugins": {
+    "ponytail@ponytail": true
+  }
 }
