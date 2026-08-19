@@ -64,7 +64,7 @@ case $scheme in
 		exec /usr/bin/xdg-open "$uri"
 		;;
 	'audio/*' | 'video/*')
-		exec mpv "$uri"
+		termexec mpv
 		;;
 	'*')
 		# fallback to primary xdg-open binary
