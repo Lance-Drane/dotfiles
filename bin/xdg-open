@@ -55,6 +55,14 @@ if [ -n "$scheme" ] && [ "$scheme" != "$uri" ]; then
 	brave)
 		exec brave-browser "$uri"
 		;;
+	vscode)
+		# there are certain cases where the URI should be replaced, i.e. https://github.com/VSCodium/vscodium/issues/401#issuecomment-631502370
+		if command -v codium >/dev/null; then exec codium "$uri"; fi
+		exec code "$uri"
+		;;
+	vscodium)
+		exec codium "$uri"
+		;;
 	geo)
 		# highly incomplete implementation, does not handle any CRS other than WGS-84 (which SHOULD always be used...) or uncertanity
 		# https://datatracker.ietf.org/doc/html/rfc5870
@@ -88,7 +96,8 @@ application/pdf)
 	exec zathura "$uri"
 	;;
 image/svg+xml)
-	exec inkscape "$uri"
+	#exec inkscape "$uri"
+	exec /usr/bin/xdg-open "$uri"
 	;;
 image/*)
 	# probably feh
