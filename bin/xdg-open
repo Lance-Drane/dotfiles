@@ -24,11 +24,18 @@ if [ -n "$scheme" ] && [ "$scheme" != "$uri" ]; then
 	# check that we have a scheme
 	case $scheme in
 	http | https)
+		# TODO check for '.onion' at the end of the URI path
 		exec "$BROWSER" "$uri"
+		;;
+	file)
+		# fall-through
 		;;
 	mailto)
 		# this may or may not be the browser
 		exec "$MAILAPP" "$uri"
+		;;
+	about)
+		exec "$BROWSER" "$uri"
 		;;
 	gopher)
 		termexec lynx
@@ -48,17 +55,40 @@ if [ -n "$scheme" ] && [ "$scheme" != "$uri" ]; then
 	brave)
 		exec brave-browser "$uri"
 		;;
+	geo)
+		# highly incomplete implementation, does not handle any CRS other than WGS-84 (which SHOULD always be used...) or uncertanity
+		# https://datatracker.ietf.org/doc/html/rfc5870
+		path="${uri#*:}"
+		latlong="${path%%;*}"
+		latlong="${latlong%%\?*}"
+		lat="${latlong%%,*}"
+		long="${latlong%,*}"
+		long="${long#*,}" # in case of altitude parameter
+
+		# TODO extract zoom from URI and default to this if it exists
+		zoom='13'
+
+		# 'layers' query param can be discovered from OSM's interface, just use default here
+		exec "$BROWSER" "https://www.openstreetmap.org/?mlat=${lat}&mlon=${long}&zoom=${zoom}&layers="
+		;;
+	telnet)
+		exec telnet "$uri"
+		;;
+	*)
+		# try default xdg-open application
+		exec /usr/bin/xdg-open "$uri"
+		;;
+
 	esac
 fi
 
-mime=$(file --brief --dereference --mime-type "$uri")
+mime=$(file --brief --dereference --mime-type -- "$uri")
 case $mime in
 application/pdf)
 	exec zathura "$uri"
 	;;
 image/svg+xml)
-	# probably feh
-	exec /usr/bin/xdg-open "$uri"
+	exec inkscape "$uri"
 	;;
 image/*)
 	# probably feh
