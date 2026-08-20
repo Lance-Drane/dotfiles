@@ -4,6 +4,11 @@ show_hidden = true
 [preview]
 image_delay = 0
 
+[plugin]
+prepend_previewers = [
+  { mime = "application/x-ipynb+json", run = "nbpreview" },
+]
+
 [[plugin.prepend_fetchers]]
 url   = "*"
 run   = "git"

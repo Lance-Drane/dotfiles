@@ -33,5 +33,10 @@ use = "yazi-rs/plugins:chmod"
 rev = "9014ed2"
 hash = "5b1c276b75cae91cbbdbe7863f39a540"
 
+[[plugin.deps]]
+use = "AnirudhG07/nbpreview"
+rev = "b504594"
+hash = "b83919985400521dee78e1c352b5d9db"
+
 [flavor]
 deps = []
