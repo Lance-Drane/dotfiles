@@ -21,29 +21,29 @@ termexec() {
 scheme=$(echo "$uri" | cut -d : -f 1)
 
 case $scheme in
-'http' | 'https')
+http | https)
 	exec "$BROWSER" "$uri"
 	;;
-'mailto')
+mailto)
 	# this may or may not be the browser
 	exec "$MAILAPP" "$uri"
 	;;
-'gopher')
+gopher)
 	termexec lynx
 	;;
-'ssh')
+ssh)
 	termexec ssh
 	;;
-'steam')
+steam)
 	exec steam "$uri"
 	;;
-'chrome')
+chrome)
 	exec chromium "$uri"
 	;;
-'firefox')
+firefox)
 	exec firefox "$uri"
 	;;
-'brave')
+brave)
 	exec brave-browser "$uri"
 	;;
 esac
