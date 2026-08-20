@@ -18,35 +18,38 @@ termexec() {
 
 # xdg-open by default only handles http(s) schemes, and not very well
 # by default, this script handles schemes as files, some schemes such as git:// are ignored
-scheme=$(echo "$uri" | cut -d : -f 1)
+scheme="${uri%%:*}"
 
-case $scheme in
-http | https)
-	exec "$BROWSER" "$uri"
-	;;
-mailto)
-	# this may or may not be the browser
-	exec "$MAILAPP" "$uri"
-	;;
-gopher)
-	termexec lynx
-	;;
-ssh)
-	termexec ssh
-	;;
-steam)
-	exec steam "$uri"
-	;;
-chrome)
-	exec chromium "$uri"
-	;;
-firefox)
-	exec firefox "$uri"
-	;;
-brave)
-	exec brave-browser "$uri"
-	;;
-esac
+if [ -n "$scheme" ] && [ "$scheme" != "$uri" ]; then
+	# check that we have a scheme
+	case $scheme in
+	http | https)
+		exec "$BROWSER" "$uri"
+		;;
+	mailto)
+		# this may or may not be the browser
+		exec "$MAILAPP" "$uri"
+		;;
+	gopher)
+		termexec lynx
+		;;
+	ssh)
+		termexec ssh
+		;;
+	steam)
+		exec steam "$uri"
+		;;
+	chrome)
+		exec chromium "$uri"
+		;;
+	firefox)
+		exec firefox "$uri"
+		;;
+	brave)
+		exec brave-browser "$uri"
+		;;
+	esac
+fi
 
 mime=$(file --brief --dereference --mime-type "$uri")
 case $mime in
