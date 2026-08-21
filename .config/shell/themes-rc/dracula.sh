@@ -28,21 +28,6 @@ export DF_THEME_AUDIO='03;38;2;139;233;253'
 export DF_THEME_BACKUP='00;38;2;98;114;164'
 export DF_THEME_IMAGE='03;38;2;255;121;198'
 
-# colored man pages, see https://unix.stackexchange.com/questions/119/colors-in-man-pages
-export LESS="-R --use-color"
-#export MANPAGER="less -s -M -Dd+g -Du+b"
-#export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export MANPAGER="less -s -M +Gg"
-export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
-export LESS_TERMCAP_md=$'\e[1;34m'     # begin blink
-export LESS_TERMCAP_so=$'\e[01;45;37m' # begin reverse video
-export LESS_TERMCAP_us=$'\e[01;36m'    # begin underline
-export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
-export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
-export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
-export GROFF_NO_SGR=1
-#export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
-
 ### CLI utils ###
 # unused codes, or consistent codes:
 # lc = LEFT, rc = RIGHT, ec = END, rs = reset color, no = normal, fi = regular file, cl = CLR_TO_EOL

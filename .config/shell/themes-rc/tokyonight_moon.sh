@@ -1,5 +1,3 @@
-# see https://draculatheme.com/spec as an example of colors
-
 # ANSI escape codes - Select Graphic Rendition subset
 
 # types of files from running stat - see https://github.com/coreutils/coreutils/blob/952435f0799e440165f97108531c4fb5741fa583/src/ls.c#L4930
@@ -27,21 +25,6 @@ export DF_THEME_ARCHIVE='03;38;2;255;117;127'
 export DF_THEME_AUDIO='03;38;2;101;188;255'
 export DF_THEME_BACKUP='00;38;2;68;74;115'
 export DF_THEME_IMAGE='03;38;2;192;153;255'
-
-# colored man pages, see https://unix.stackexchange.com/questions/119/colors-in-man-pages
-export LESS="-R --use-color"
-#export MANPAGER="less -s -M -Dd+g -Du+b"
-#export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export MANPAGER="less -s -M +Gg"
-export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
-export LESS_TERMCAP_md=$'\e[1;34m'     # begin blink
-export LESS_TERMCAP_so=$'\e[01;45;37m' # begin reverse video
-export LESS_TERMCAP_us=$'\e[01;36m'    # begin underline
-export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
-export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
-export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
-export GROFF_NO_SGR=1
-#export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
 
 ### CLI utils ###
 # unused codes, or consistent codes:

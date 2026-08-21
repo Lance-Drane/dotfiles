@@ -12,7 +12,7 @@ yazi() {
 		command rm -f -- "$1"
 	)"
 	set -- "${1%.}"
-	if [ "$1" != "$PWD" ] && [ -d "$1" ]; then cd -- "$1" || printf '%s\n' "directory $1 does not exist (was it removed?)" >&2; fi
+	if [ "$1" != "$PWD" ] && [ -d "$1" ]; then cd -- "$1" || true; fi
 }
 alias y='yazi'
 
@@ -39,6 +39,31 @@ alias fd='fd --hyperlink=auto --hidden --exclude .git --exclude node_modules --e
 export FZF_CTRL_R_OPTS="--bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' --color header:italic --header 'Press CTRL-Y to copy command into clipboard'"
 export FZF_ALT_C_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'tree -C {}'"
 export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+# less
+export LESS="-iMR --use-color"
+#export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
+#export LESSOPEN="| /usr/bin/lesspipe %s"
+#export LESSCLOSE="| /usr/bin/lesspipe %s %s"
+
+# colored man pages, not perfect
+export MANROFFOPT='-c'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# old way of doing colored man pages, sometimes better than using bat; see https://unix.stackexchange.com/questions/119/colors-in-man-pages
+#export MANPAGER="less -s -M -Dd+g -Du+b"
+#export MANPAGER="less -s -M +Gg"
+# export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
+# export LESS_TERMCAP_md=$'\e[1;34m'     # begin blink
+# export LESS_TERMCAP_so=$'\e[01;45;37m' # begin reverse video
+# export LESS_TERMCAP_us=$'\e[01;36m'    # begin underline
+# export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
+# export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
+# export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
+# export GROFF_NO_SGR=1
+
+# LazyGit multiple config files
+export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit/config.yml,${XDG_CONFIG_HOME}/lazygit/theme.yml"
 
 # directory simplification
 alias ..='cd ..'
