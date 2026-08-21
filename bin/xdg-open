@@ -90,7 +90,12 @@ if [ -n "$scheme" ] && [ "$scheme" != "$uri" ]; then
 	esac
 fi
 
-mime=$(file --brief --dereference --mime-type -- "$uri")
+if command -v mimetype >/dev/null; then
+	mime=$(mimetype --brief --dereference -- "$uri")
+else
+	# seems to be a lot less specific, but is more portable and faster
+	mime=$(file --brief --dereference --mime-type -- "$uri")
+fi
 case $mime in
 application/pdf)
 	exec zathura "$uri"
