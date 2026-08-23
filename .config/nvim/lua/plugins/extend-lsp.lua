@@ -21,6 +21,11 @@ return {
 					},
 				},
 			}
+
+			-- use rust_analyzer on system, not mason
+			-- opts.server.rust_analyzer = {
+			-- 	mason = false,
+			-- }
 		end,
 	},
 }
