@@ -31,6 +31,7 @@
 !/.config/tmux/
 !/.config/user-dirs.dirs
 !/.config/user-dirs.locale
+!/.config/wget/
 !/.config/yazi/
 # use package.toml as source of truth and install in bootstrap
 /.config/yazi/plugins/*

@@ -29,7 +29,7 @@ fi
 # Force apps to use XDG dirs instead of ${HOME}, list of programs at https://github.com/b3nj5m1n/xdg-ninja
 export PARALLEL_HOME="${XDG_CONFIG_HOME}/parallel"
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/config"
-export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
+export WGETRC="${XDG_CONFIG_HOME}/wget/wgetrc"
 export LESSHISTFILE="${XDG_STATE_HOME}/lesshst" # this can be removed once all my computers use Less version >= 598
 export FFMPEG_DATADIR="${XDG_CONFIG_HOME}/ffmpeg"
 # ZSH - note that this does not handle zprofile, only zshrc; also note that using this with zshenv is probably a bad idea
@@ -116,6 +116,9 @@ export PAGER="less"     # posix
 export TERMINAL="kitty" # used by xdg-open and some other programs
 #export BROWSER="firefox" # used by xdg-open and some development tools i.e. vite
 #export MAILAPP="$BROWSER" # used by my personal xdg-open script
+
+# dynamic system detection (TODO - probably doesn't work on BSDs)
+[ -e /sys/class/power_supply/ ] && export IS_LAPTOP='1'
 
 # private env variables we don't want to commit to version control
 [ -f "${XDG_CONFIG_HOME}/shell/session-envs.private.sh" ] && . "${XDG_CONFIG_HOME}/shell/session-envs.private.sh"
