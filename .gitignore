@@ -23,8 +23,11 @@
 !/.config/mpv/
 !/.config/npm/
 !/.config/nvim/
+!/.config/oxwm/
+!/.config/picom/
 !/.config/python/
 !/.config/ripgrep/
+!/.config/rofi/
 !/.config/rmpc/
 !/.config/shell/
 !/.config/starship/

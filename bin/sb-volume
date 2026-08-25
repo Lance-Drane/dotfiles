@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# 🔇🔊🔉🔈
+
+set -eu
+
+bytes=$(wpctl get-volume @DEFAULT_SINK@)
+# shellcheck disable=SC2086  # deliberate split
+set -- $bytes
+
+vol="$2"
+icon="󰝟"
+wpctl_arg_count="$#" # may end with '[MUTED]'
+
+IFS='.'
+# shellcheck disable=SC2086  # deliberate split
+set -- $vol
+vol=$(printf "%.0f" "$1$2")
+
+if [ "$wpctl_arg_count" -eq 2 ]; then
+	# shellcheck disable=SC2194  # deliberate
+	case 1 in
+	$((vol >= 70))) icon="󰕾" ;;
+	$((vol >= 30))) icon="󰖀" ;;
+	*) icon="󰕿" ;;
+	esac
+fi
+
+echo "$icon $vol%"
