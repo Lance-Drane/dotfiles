@@ -40,7 +40,7 @@
 [interactive]
 	diffFilter = delta --color-only
 [include]
-	path = ~/.config/git/themes/theme.ini
+	path = ~/.config/git/themes/theme.gitconfig
 [init]
 	defaultBranch = main
 [merge]

@@ -1,3 +1,4 @@
+#/* vim: set filetype=gitconfig : */
 [delta "theme"]
     dark = true
     right-arrow = >

@@ -1,3 +1,4 @@
+#/* vim: set filetype=gitconfig : */
 [delta "theme"]
     # author: https://github.com/lanjelin
     dark = true
