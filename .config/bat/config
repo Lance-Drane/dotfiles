@@ -1,2 +1,5 @@
 # remember: run bat cache --build to add the theme
 --theme="active_theme"
+# no grid
+#--style="full,-grid"
+--italic-text=always
