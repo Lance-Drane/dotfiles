@@ -34,6 +34,6 @@ export LS_COLORS="rs=0:mi=00:su=${DF_THEME_SETUID}:sg=${DF_THEME_SETGID}:ca=${DF
 #export EZA_COLORS='uu=36:uR=31:un=35:gu=37:da=2;34:ur=34:uw=95:ux=36:ue=36:gr=34:gw=35:gx=36:tr=34:tw=35:tx=36:xx=95:'
 # mt = match , fn = filename, ln = line number, bn = byte offset, se=separators
 export GREP_COLORS='mt=1;38;2;255;117;127:fn=38;2;192;153;255:ln=38;2;195;232;141:bn=38;2;195;232;141:se=38;2;101;188;255'
-export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --color=fg:#c8d3f5,bg:#1e2030,hl:#65bcff --color=fg+:#c8d3f5,bg+:#2d3f76,hl+:#65bcff --color=border:#589ed7,gutter:#1e2030,header:#ff966c,info:#545c7e,marker:#ff007c,pointer:#ff007c,prompt:#65bcff,query:#c8d3f5:regular,scrollbar:#589ed7,separator:#ff966c,spinner:#ff007c"
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --color=fg:#c0caf5,bg:#1a1b26,hl:#2ac3de,fg+:#c0caf5,bg+:#283457 --color=hl+:#2ac3de,info:#7aa2f7,prompt:#2ac3de,pointer:#ff007c --color=marker:#ff5da0,spinner:#ff007c,header:#ff9e64,query:#c0caf5 --color=border:#27a1b9,separator:#ff9e64,gutter:#283457"
 # null, false, true, number, string, array, object, object key
 export JQ_COLORS="0;90:0;31:0;32:0;33:0;36:1;35:1;35:1;34"

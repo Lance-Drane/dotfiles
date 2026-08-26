@@ -1,1 +1,1 @@
-themes-rc/tokyonight_moon.sh
+themes-rc/tokyonight_night.sh

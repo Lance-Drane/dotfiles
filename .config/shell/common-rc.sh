@@ -33,7 +33,10 @@ alias bc='bc -lq'
 alias nohup="nohup "
 
 # FD, remember to never use the ubuntu version because it's out of date and is called 'fdfind'
-alias fd='fd --hyperlink=auto --hidden --exclude .git --exclude node_modules --exclude .venv --exclude target'
+command -v fd >/dev/null && (
+	alias fd='fd --hyperlink=auto --hidden --exclude .git --exclude node_modules --exclude .venv --exclude target'
+	export FZF_DEFAULT_COMMAND='fd'
+)
 
 # FZF
 export FZF_CTRL_R_OPTS="--bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' --color header:italic --header 'Press CTRL-Y to copy command into clipboard'"
@@ -49,6 +52,9 @@ export LESS="-iMR --use-color"
 # colored man pages, not perfect
 export MANROFFOPT='-c'
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# another way: using nvim (WARNING: don't use if installing from snap (LOL))
+#export MANPAGER='nvim +Man! '
 
 # old way of doing colored man pages, sometimes better than using bat; see https://unix.stackexchange.com/questions/119/colors-in-man-pages
 #export MANPAGER="less -s -M -Dd+g -Du+b"
