@@ -22,11 +22,8 @@
 
 // defines different aspects of the window
 window {
-    width: 700;
-    /*since line wont work with height, i comment it out
-    if you rather control the size via height
-    just comment it out */
-    //height: 500;
+    width: 50%;
+    height: 50%;
 
     orientation: horizontal;
     location: center;
