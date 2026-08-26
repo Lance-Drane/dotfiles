@@ -13,6 +13,7 @@
 !/.config/copilot/
 /.config/copilot/*
 !/.config/copilot/settings.json
+!/.config/dunst/
 !/.config/eza/
 !/.config/fontconfig/
 !/.config/git/
