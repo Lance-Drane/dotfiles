@@ -105,8 +105,6 @@ local blocks = {
 		color = colors.datetime,
 		underline = true,
 	}),
-	block_separator(),
-	oxwm.bar.block.systray({}),
 }
 
 if is_laptop then
@@ -124,6 +122,9 @@ if is_laptop then
 		})
 	)
 end
+
+table.insert(blocks, block_separator())
+table.insert(blocks, oxwm.bar.block.systray({}))
 
 -------------------------------------------------------------------------------
 -- Basic Settings
