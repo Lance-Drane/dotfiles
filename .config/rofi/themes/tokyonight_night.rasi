@@ -31,7 +31,8 @@ window {
     orientation: horizontal;
     location: center;
     anchor: center;
-    transparency: "screenshot";
+    // https://davatorium.github.io/rofi/guides/Transparency/theme3-transparency/
+    transparency: "real";
     border-color: @primary;
     border: 3px;
     border-radius: 6px;
