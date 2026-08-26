@@ -271,11 +271,11 @@ oxwm.key.bind({}, "XF86MonBrightnessDown", oxwm.spawn({ "brightnessctl set 10%-"
 oxwm.key.bind({ modkey }, "Q", oxwm.client.kill())
 
 -- Window state toggles
-oxwm.key.bind({ modkey, "Shift" }, "F", oxwm.client.toggle_fullscreen())
-oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.client.toggle_floating())
+oxwm.key.bind({ modkey }, "F", oxwm.client.toggle_fullscreen())
+oxwm.key.bind({ modkey, "Shift" }, "F", oxwm.client.toggle_floating())
 
 -- Layout management
-oxwm.key.bind({ modkey }, "F", oxwm.layout.set("normie"))
+oxwm.key.bind({ modkey, "Shift" }, "C", oxwm.layout.set("normie"))
 oxwm.key.bind({ modkey }, "C", oxwm.layout.set("tiling"))
 -- Cycle through layouts
 oxwm.key.bind({ modkey }, "N", oxwm.layout.cycle())
@@ -289,9 +289,9 @@ oxwm.key.bind({ modkey }, "L", oxwm.set_master_factor(5))
 -- oxwm.tiled_resize_mode(true)
 -- Increment/Decrement number of master windows
 oxwm.key.bind({ modkey }, "I", oxwm.inc_num_master(1))
-oxwm.key.bind({ modkey }, "P", oxwm.inc_num_master(-1))
+oxwm.key.bind({ modkey }, "D", oxwm.inc_num_master(-1))
 
-oxwm.key.bind({ modkey }, "A", oxwm.toggle_gaps())
+oxwm.key.bind({ modkey }, "G", oxwm.toggle_gaps())
 oxwm.key.bind({ modkey }, "B", oxwm.toggle_bar())
 
 -- Focus movement [1 for up in the stack, -1 for down]
