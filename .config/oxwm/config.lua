@@ -219,7 +219,7 @@ oxwm.bar.set_scheme_selected(colors.focus, colors.bg, colors.focus)
 oxwm.bar.set_scheme_urgent(colors.critical, colors.bg, colors.critical)
 
 -- Hide tags that have no windows and are not selected
--- oxwm.bar.set_hide_vacant_tags(true)
+oxwm.bar.set_hide_vacant_tags(true)
 
 -------------------------------------------------------------------------------
 -- Keybindings
@@ -311,9 +311,9 @@ oxwm.key.bind({ modkey, "Shift" }, "Period", oxwm.monitor.tag(1))
 oxwm.key.bind({ modkey, "Shift" }, "Right", oxwm.monitor.tag(1))
 
 -- Warp the cursor to the focused monitor when switching monitors
--- oxwm.monitor.warp_cursor(true)
+oxwm.monitor.warp_cursor(true)
 -- Warp the cursor along when sending a window to another monitor
--- oxwm.monitor.warp_cursor_on_send(true)
+oxwm.monitor.warp_cursor_on_send(true)
 
 -- Workspace (tag) navigation
 -- Switch to workspace N (tags are 0-indexed, so tag "1" is index 0)
