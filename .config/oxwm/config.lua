@@ -79,6 +79,7 @@ local blocks = {
 		-- click = { command = "bluetui", floating = true },
 	}),
 	block_separator(),
+	--oxwm.bar.cputemp({ format = "{}", interval = 10, color = colors.ram, underline = true }),
 	-- oxwm.bar.block.shell({
 	-- 	format = "{}",
 	-- 	command = "sb-cputemp",
@@ -104,6 +105,8 @@ local blocks = {
 		color = colors.datetime,
 		underline = true,
 	}),
+	block_separator(),
+	oxwm.bar.block.systray({}),
 }
 
 if is_laptop then
