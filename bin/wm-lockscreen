@@ -1,0 +1,15 @@
+#!/bin/sh
+playerctl --all-players pause
+# shellcheck disable=2046 # deliberate split
+set -- $(wpctl get-volume @DEFAULT_SINK@)
+# output will have [MUTED] appended if muted
+muted_args="$#"
+wpctl set-mute @DEFAULT_SINK@ 1
+
+lock_args='-c 7dcfff' # tokyonight cyan
+wallpaper_lock_file="$HOME"/Pictures/wallpapers/wallpaper-lock.png
+[ -e "$wallpaper_lock_file" ] && lock_args="-t -i $wallpaper_lock_file"
+# shellcheck disable=2086 # deliberate split
+i3lock -n $lock_args
+
+if [ "$muted_args" -le 2 ]; then wpctl set-mute @DEFAULT_SINK@ 0; fi

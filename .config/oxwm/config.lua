@@ -244,6 +244,7 @@ oxwm.key.bind({ modkey, "Shift" }, "R", oxwm.restart())
 ------------------ APPLICATIONS ----------
 oxwm.key.bind({ modkey }, "Return", oxwm.spawn_terminal())
 oxwm.key.bind({ modkey, "Shift" }, "Return", oxwm.spawn({ browser }))
+oxwm.key.bind({ modkey, "Shift" }, "Z", oxwm.spawn("wm-lockscreen"))
 -- application launcher
 oxwm.key.bind({ modkey }, "Space", oxwm.spawn({ "rofi -show drun" })) -- desktop runner
 oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.spawn({ "rofi -show run" })) -- binary runner
