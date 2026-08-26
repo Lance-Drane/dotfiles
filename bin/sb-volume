@@ -2,22 +2,23 @@
 
 # 🔇🔊🔉🔈
 
-set -eu
+set -e
 
-bytes=$(wpctl get-volume @DEFAULT_SINK@)
+icon='󰝟'
+
+vol=$(wpctl get-volume @DEFAULT_SINK@)
 # shellcheck disable=SC2086  # deliberate split
-set -- $bytes
+set -- $vol
 
-vol="$2"
-icon="󰝟"
 wpctl_arg_count="$#" # may end with '[MUTED]'
+vol="$2"
 
 IFS='.'
 # shellcheck disable=SC2086  # deliberate split
 set -- $vol
-vol=$(printf "%.0f" "$1$2")
+vol=$(printf "%.0f" "$1$2") || vol=''
 
-if [ "$wpctl_arg_count" -eq 2 ]; then
+if [ "$wpctl_arg_count" -eq 2 ] && [ -n "$vol" ]; then
 	# shellcheck disable=SC2194  # deliberate
 	case 1 in
 	$((vol >= 70))) icon="󰕾" ;;
