@@ -50,11 +50,11 @@ export LESS="-iMR --use-color"
 #export LESSCLOSE="| /usr/bin/lesspipe %s %s"
 
 # colored man pages, not perfect
-export MANROFFOPT='-c'
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# export MANROFFOPT='-c'
+# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # another way: using nvim (WARNING: don't use if installing from snap (LOL))
-#export MANPAGER='nvim +Man! '
+export MANPAGER='nvim +Man! '
 
 # old way of doing colored man pages, sometimes better than using bat; see https://unix.stackexchange.com/questions/119/colors-in-man-pages
 #export MANPAGER="less -s -M -Dd+g -Du+b"

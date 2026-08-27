@@ -6,7 +6,6 @@ set -u
 # Debian and its derivatives are notorious for having out-of-date packages, especially if you are cursed to be on an LTS version. (Such things are inexplicably required by IT departments.)
 # Also Snaps/Flatpacks are terrible in many different ways (did you know that 'nvim +Man!' doesn't work with a Snap installed nvim?).
 
-tmpprefix="/tmp/df-deb-install-tarballs-"
 # no args = handle parallelization of the script
 if [ "$#" -eq 0 ]; then
 	# $1 = owner/repository
@@ -14,20 +13,23 @@ if [ "$#" -eq 0 ]; then
 	exit
 fi
 
-# this part of the script runs in parallel until we place the .deb in the TMP directory
+# this part of the script runs in parallel
 set -e
 
+tmpdir="/tmp/df-deb-install-tarballs/"
 repo="$1"
+
 dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r '[.assets.[].browser_download_url][] | select(endswith("linux-x86_64.tar.gz"))')
 fname="$(basename "$dl_url")"
-tarpath="${tmpprefix}${fname}"
+tarpath="${tmpdir}${fname}"
+mkdir -p "$tmpdir"
 
-curl -fsSL "$dl_url" >"$tarpath"
+curl -fsSL "$dl_url" >|"$tarpath"
 echo "acquired tarball for $repo at $tarpath , extracting" >&2
-extractdir="/tmp/${fname%\.tar\.gz}"
+extractdir="${tmpdir}${fname%\.tar\.gz}"
 
-tar -xzf "$tarpath"
+tar -xzf "$tarpath" -C "$tmpdir"
 
 sudo chown -R root:root "$extractdir"
-sudo cp -Rvf "${extractdir}"/* "/usr/local/"
+sudo cp -Rf "${extractdir}"/* "/usr/local/"
 sudo rm -rf "$extractdir" "$tarpath"

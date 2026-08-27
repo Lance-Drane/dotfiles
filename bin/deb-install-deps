@@ -58,5 +58,5 @@ dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r
 fname="$(basename "$dl_url")"
 tmppath="${tmpprefix}${fname}"
 
-curl -fsSL "$dl_url" >"$tmppath"
+curl -fsSL "$dl_url" >|"$tmppath"
 echo "acquired deb for $repo" >&2
