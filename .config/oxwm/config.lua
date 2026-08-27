@@ -239,7 +239,7 @@ oxwm.bar.set_hide_vacant_tags(true)
 
 oxwm.key.bind({ modkey, "Shift" }, "Slash", oxwm.show_keybinds())
 -- Window manager controls
-oxwm.key.bind({ modkey, "Shift" }, "Q", oxwm.quit())
+oxwm.key.bind({ modkey, "Shift" }, "backslash", oxwm.quit())
 oxwm.key.bind({ modkey, "Shift" }, "R", oxwm.restart())
 
 ------------------ APPLICATIONS ----------
