@@ -34,8 +34,8 @@ alias nohup="nohup "
 
 # FD, remember to never use the ubuntu version because it's out of date and is called 'fdfind'
 command -v fd >/dev/null && {
-	alias fd='fd --hyperlink=auto --hidden --exclude .git --exclude node_modules --exclude .venv --exclude target'
-	export FZF_DEFAULT_COMMAND='fd'
+	alias fd='fd --hyperlink=auto --hidden --exclude .git'
+	export FZF_DEFAULT_COMMAND='fd --hidden --exclude .git'
 }
 
 # FZF

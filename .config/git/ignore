@@ -2,6 +2,7 @@
 *.log
 *.out
 *.err
+*.tmp
 /tmp/
 
 # backups
@@ -29,6 +30,11 @@ __pycache__
 
 # c
 *.o
+
+# zig
+zig-out/
+zig-pkg/
+.zig-cache/
 
 # various build systems
 build/
