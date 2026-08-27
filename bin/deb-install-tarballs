@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# don't set -e yet because we can allow parts of the xargs parallelization to fail
+set -u
+
+# Debian and its derivatives are notorious for having out-of-date packages, especially if you are cursed to be on an LTS version. (Such things are inexplicably required by IT departments.)
+# Also Snaps/Flatpacks are terrible in many different ways (did you know that 'nvim +Man!' doesn't work with a Snap installed nvim?).
+
+tmpprefix="/tmp/df-deb-install-tarballs-"
+# no args = handle parallelization of the script
+if [ "$#" -eq 0 ]; then
+	# $1 = owner/repository
+	echo "neovim/neovim" | xargs -n1 -P5 "$0"
+	exit
+fi
+
+# this part of the script runs in parallel until we place the .deb in the TMP directory
+set -e
+
+repo="$1"
+dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r '[.assets.[].browser_download_url][] | select(endswith("linux-x86_64.tar.gz"))')
+fname="$(basename "$dl_url")"
+tarpath="${tmpprefix}${fname}"
+
+curl -fsSL "$dl_url" >"$tarpath"
+echo "acquired tarball for $repo at $tarpath , extracting" >&2
+extractdir="/tmp/${fname%\.tar\.gz}"
+
+tar -xzf "$tarpath"
+
+sudo chown -R root:root "$extractdir"
+sudo cp -Rvf "${extractdir}"/* "/usr/local/"
+sudo rm -rf "$extractdir" "$tarpath"
