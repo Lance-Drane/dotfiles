@@ -60,15 +60,29 @@ local function block_separator()
 end
 
 local blocks = {
-	-- oxwm.bar.block.shell({
-	-- 	format = "{}",
-	-- 	command = "sb-music",
-	-- 	interval = 5,
-	-- 	color = colors.music,
-	-- 	underline = false,
-	-- 	click = "",
-	-- }),
-	-- block_separator(),
+	oxwm.bar.block.static({
+		text = "󰙣 ",
+		interval = 999999999,
+		color = colors.music,
+		underline = false,
+		click = "playerctl --player mpd previous",
+	}),
+	oxwm.bar.block.shell({
+		format = "{}",
+		command = "sb-player",
+		interval = 5,
+		color = colors.music,
+		underline = false,
+		click = "playerctl --player mpd play-pause",
+	}),
+	oxwm.bar.block.static({
+		text = " 󰙡",
+		interval = 999999999,
+		color = colors.music,
+		underline = false,
+		click = "playerctl --player mpd next",
+	}),
+	block_separator(),
 	oxwm.bar.block.ram({
 		format = " {used}/{total} GB",
 		interval = 5,
@@ -100,7 +114,7 @@ local blocks = {
 	block_separator(),
 	oxwm.bar.block.datetime({
 		format = "󰥔 {}",
-		date_format = "%m/%d - %I:%M %P",
+		date_format = "%m/%d   %I:%M %P",
 		interval = 5,
 		color = colors.datetime,
 		underline = true,
@@ -112,10 +126,9 @@ if is_laptop then
 	table.insert(
 		blocks,
 		oxwm.bar.block.battery({
-			format = "Bat: {}%",
-			charging = "󰂄 Bat: {}%",
-			discharging = "- Bat: {}%",
-			full = " Bat: {}%",
+			charging = "󰂄 {}%",
+			discharging = "󰁾 {}%",
+			full = "󱊣 {}%",
 			interval = 30,
 			color = colors.battery,
 			underline = true,

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+FORMAT='{{ trunc(title,50) }}'
+icon=""
+
+for player in $(playerctl --list-all --ignore-player mpd --no-messages); do
+	if [ "$(playerctl --player "$player" status)" = "Playing" ]; then
+		echo "$icon" "$(playerctl metadata --player "$player" --format "$FORMAT")"
+		exit 0
+	fi
+done
+
+playlist=$(playerctl metadata --player mpd --format "$FORMAT" --no-messages)
+if [ -z "$playlist" ]; then
+	echo ''
+	exit
+fi
+echo "$icon $playlist"
