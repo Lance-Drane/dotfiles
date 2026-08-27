@@ -14,7 +14,10 @@ trim_trailing_whitespace = false
 
 ### pointless tab/space opinions below
 
-[*.{awk,c,cpp,go,h,hpp,java,lua,make,md,mk,rst,sh,zig},Makefile,Makefile.*]
+[*.{awk,c,cpp,go,h,hpp,java,lua,make,md,mk,rst,sh,zig}]
+indent_style = tab
+
+[{dunstrc,Makefile,Makefile.*}]
 indent_style = tab
 
 [*.{js,ts,jsx,tsx,html,css,vue,rb,json,yaml,yml,xml,toml}]
