@@ -3,9 +3,11 @@
 -- Add any additional options here
 
 local opt = vim.opt
-opt.expandtab = false
+opt.expandtab = false -- override this with editorconfig 'indent_style' setting
+opt.scrolloff = 4 -- when scrolling full page, how many lines to leave above/below
+opt.shiftwidth = 4
 opt.swapfile = false
-opt.tabstop = 6
+opt.tabstop = 8
 
 vim.g.lazyvim_python_lsp = "basedpyright"
 --vim.g.lazyvim_python_lsp = "ty"
