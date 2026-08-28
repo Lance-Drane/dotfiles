@@ -183,6 +183,7 @@ oxwm.border.set_unfocused_color(colors.fg)
 oxwm.set_floating_position("center")
 
 -- Smart Enabled = No border if 1 window
+oxwm.gaps.set_enabled(true)
 oxwm.gaps.set_smart(true)
 -- Inner gaps (horizontal, vertical) in pixels
 oxwm.gaps.set_inner(5, 5)
@@ -227,9 +228,9 @@ oxwm.bar.set_blocks(blocks)
 -- Parameters: foreground, background, border
 
 -- Unoccupied tags
-oxwm.bar.set_scheme_normal(colors.fg, colors.bg, "#444444")
+oxwm.bar.set_scheme_normal(colors.fg, colors.bg, colors.bg)
 -- Occupied tags
-oxwm.bar.set_scheme_occupied(colors.info, colors.bg, colors.info)
+oxwm.bar.set_scheme_occupied(colors.fg, colors.bg, colors.info)
 -- Currently selected tag
 oxwm.bar.set_scheme_selected(colors.focus, colors.bg, colors.focus)
 -- Urgent tags (windows requesting attention)
@@ -288,7 +289,7 @@ oxwm.key.bind({ modkey }, "F", oxwm.client.toggle_fullscreen())
 oxwm.key.bind({ modkey, "Shift" }, "F", oxwm.client.toggle_floating())
 
 -- Layout management
-oxwm.key.bind({ modkey, "Shift" }, "C", oxwm.layout.set("normie"))
+oxwm.key.bind({ modkey, "Shift" }, "C", oxwm.layout.set("scrolling"))
 oxwm.key.bind({ modkey }, "C", oxwm.layout.set("tiling"))
 -- Cycle through layouts
 oxwm.key.bind({ modkey }, "N", oxwm.layout.cycle())
