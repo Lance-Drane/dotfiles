@@ -45,7 +45,7 @@ local tags = { "1󰈹 ", "2 ", "3 ", "4 ", "5󰻞 ", "6 ", "7? ", "8
 
 -- Font for the status bar (use "fc-list" to see available fonts)
 -- local bar_font = "monospace:style=Bold:size=16"
-local bar_font = "monospace:style=Bold:size=16"
+local bar_font = "monospace:style=Bold:size=12"
 
 -- Define your blocks
 -- Similar to widgets in qtile, or dwmblocks
