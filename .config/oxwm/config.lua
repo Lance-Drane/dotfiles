@@ -113,8 +113,8 @@ local blocks = {
 	}),
 	block_separator(),
 	oxwm.bar.block.datetime({
-		format = "󰥔 {}",
-		date_format = "%m/%d   %I:%M %P",
+		format = "{}",
+		date_format = " %m/%d 󰥔 %I:%M %P",
 		interval = 5,
 		color = colors.datetime,
 		underline = true,
