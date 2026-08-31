@@ -2,8 +2,28 @@
 # A LOT of credit to this script goes to https://github.com/ShikherVerma/i3lock-multimonitor/blob/master/lock
 # modified for my own purposes with improvements (i.e. cache cleanup), and to be POSIX because I'm pedantic
 
+imagemagick() {
+	# TODO: wrapper for imagemagick 'convert' -> 'magick' migration, remove when ready
+	if command -v magick >/dev/null; then
+		command magick "$@"
+	else
+		command convert "$@"
+	fi
+}
+
 # pre-lock: mute, pause notifications, pause any videos playing
-dunst_pause_level=$(dunstctl get-pause-level) || dunst_pause_level='100'
+dunst_pause_level=$(dunstctl get-pause-level)
+# TODO: remove this check once on Dunst >= 1.10.0
+if [ -z "$dunst_pause_level" ]; then
+	case $(dunstctl is-paused) in
+	false)
+		dunst_pause_level='0'
+		;;
+	*)
+		dunst_pause_level='100'
+		;;
+	esac
+fi
 if [ "$dunst_pause_level" != '100' ]; then dunstctl set-paused true; fi
 playerctl --all-players pause
 # shellcheck disable=2046 # deliberate split
@@ -47,7 +67,7 @@ if [ -e "$wallpaper_lock_file" ]; then
 			screen_y="$4"
 			CACHE_IMG="$CACHE_DIR"/"$MD5_IMG.${screen_width}x${screen_height}".png
 			if ! [ -e "$CACHE_IMG" ]; then
-				magick "$wallpaper_lock_file" -resize "${screen_width}x${screen_height}^" -gravity Center -crop "${screen_width}x${screen_height}+0+0" +repage "$CACHE_IMG"
+				imagemagick "$wallpaper_lock_file" -resize "${screen_width}x${screen_height}^" -gravity Center -crop "${screen_width}x${screen_height}+0+0" +repage "$CACHE_IMG"
 			fi
 			if [ "$OUTPUT_IMG_WIDTH" -lt $((screen_width + screen_x)) ]; then OUTPUT_IMG_WIDTH=$((screen_width + screen_x)); fi
 			if [ "$OUTPUT_IMG_HEIGHT" -lt $((screen_height + screen_y)) ]; then OUTPUT_IMG_HEIGHT=$((screen_height + screen_y)); fi
@@ -56,9 +76,9 @@ if [ -e "$wallpaper_lock_file" ]; then
 			IFS="$OIFS"
 		done
 
-		magick -size ${OUTPUT_IMG_WIDTH}x${OUTPUT_IMG_HEIGHT} 'xc:black' "$OUTPUT_IMG"
+		imagemagick -size ${OUTPUT_IMG_WIDTH}x${OUTPUT_IMG_HEIGHT} 'xc:black' "$OUTPUT_IMG"
 		# shellcheck disable=2086 # deliberate split
-		magick "$OUTPUT_IMG" -colorspace sRGB $magick_args "$OUTPUT_IMG"
+		imagemagick "$OUTPUT_IMG" -colorspace sRGB $magick_args "$OUTPUT_IMG"
 	fi
 
 	lock_args="-i $OUTPUT_IMG"
@@ -67,5 +87,6 @@ fi
 i3lock -n -e $lock_args
 
 # post-lock: resume notifications and unmute (don't play videos)
-if [ "$dunst_pause_level" != '100' ]; then dunstctl set-pause-level "$dunst_pause_level"; fi
+# TODO: remove set-paused fallback once able to upgrade to dunst 1.10.0
+if [ "$dunst_pause_level" != '100' ]; then dunstctl set-pause-level "$dunst_pause_level" || dunstctl set-paused false; fi
 if [ "$muted_args" -le 2 ]; then wpctl set-mute @DEFAULT_SINK@ 0; fi
