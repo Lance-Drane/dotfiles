@@ -1,4 +1,10 @@
 #!/bin/sh
+# A LOT of credit to this script goes to https://github.com/ShikherVerma/i3lock-multimonitor/blob/master/lock
+# modified for my own purposes with improvements (i.e. cache cleanup), and to be POSIX because I'm pedantic
+
+# pre-lock: mute, pause notifications, pause any videos playing
+dunst_pause_level=$(dunstctl get-pause-level) || dunst_pause_level='100'
+if [ "$dunst_pause_level" != '100' ]; then dunstctl set-paused true; fi
 playerctl --all-players pause
 # shellcheck disable=2046 # deliberate split
 set -- $(wpctl get-volume @DEFAULT_SINK@)
@@ -6,10 +12,60 @@ set -- $(wpctl get-volume @DEFAULT_SINK@)
 muted_args="$#"
 wpctl set-mute @DEFAULT_SINK@ 1
 
+# handle locking screen, generating image for each monitor
+# use cache as much as possible to avoid running imagemagick
 lock_args='-c 7dcfff' # tokyonight cyan
 wallpaper_lock_file="$HOME"/Pictures/wallpapers/wallpaper-lock.png
-[ -e "$wallpaper_lock_file" ] && lock_args="-t -i $wallpaper_lock_file"
-# shellcheck disable=2086 # deliberate split
-i3lock -n $lock_args
+if [ -e "$wallpaper_lock_file" ]; then
+	CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/i3lock-multimonitor"
+	[ -e "$CACHE_DIR" ] || mkdir -p "$CACHE_DIR"
+	MD5_IMG=$(md5sum "$wallpaper_lock_file" | cut -c 1-32)
 
+	# nuke cache if we change background image
+	CACHE_FILE="$CACHE_DIR"/"$MD5_IMG"
+	[ -e "$CACHE_FILE" ] || rm "$CACHE_DIR"/* 2>/dev/null
+	touch "$CACHE_FILE"
+
+	MD5_SCREEN=$(xrandr --listactivemonitors | md5sum | cut -c 1-32)
+	OUTPUT_IMG="$CACHE_DIR"/"$MD5_IMG"."$MD5_SCREEN".png
+	if [ ! -e "$OUTPUT_IMG" ]; then
+		OUTPUT_IMG_WIDTH=0
+		OUTPUT_IMG_HEIGHT=0
+		magick_args=''
+		monitors=$(xrandr --listactivemonitors | awk '/[0-9]+\/[0-9]+x/ {
+	    split($3,a,"[+/x]");
+	    printf("%s_%s_%s_%s\n", a[1],a[3],a[5],a[6]);
+	    }')
+		for line in $monitors; do
+			OIFS="$IFS"
+			IFS='_'
+			# shellcheck disable=2086 #(deliberate split)
+			set -- $line
+			screen_width="$1"
+			screen_height="$2"
+			screen_x="$3"
+			screen_y="$4"
+			CACHE_IMG="$CACHE_DIR"/"$MD5_IMG.${screen_width}x${screen_height}".png
+			if ! [ -e "$CACHE_IMG" ]; then
+				magick "$wallpaper_lock_file" -resize "${screen_width}x${screen_height}^" -gravity Center -crop "${screen_width}x${screen_height}+0+0" +repage "$CACHE_IMG"
+			fi
+			if [ "$OUTPUT_IMG_WIDTH" -lt $((screen_width + screen_x)) ]; then OUTPUT_IMG_WIDTH=$((screen_width + screen_x)); fi
+			if [ "$OUTPUT_IMG_HEIGHT" -lt $((screen_height + screen_y)) ]; then OUTPUT_IMG_HEIGHT=$((screen_height + screen_y)); fi
+
+			magick_args="$magick_args -type TrueColor $CACHE_IMG -geometry +$screen_x+$screen_y -composite "
+			IFS="$OIFS"
+		done
+
+		magick -size ${OUTPUT_IMG_WIDTH}x${OUTPUT_IMG_HEIGHT} 'xc:black' "$OUTPUT_IMG"
+		# shellcheck disable=2086 # deliberate split
+		magick "$OUTPUT_IMG" -colorspace sRGB $magick_args "$OUTPUT_IMG"
+	fi
+
+	lock_args="-i $OUTPUT_IMG"
+fi
+# shellcheck disable=2086 # deliberate split
+i3lock -n -e $lock_args
+
+# post-lock: resume notifications and unmute (don't play videos)
+if [ "$dunst_pause_level" != '100' ]; then dunstctl set-pause-level "$dunst_pause_level"; fi
 if [ "$muted_args" -le 2 ]; then wpctl set-mute @DEFAULT_SINK@ 0; fi

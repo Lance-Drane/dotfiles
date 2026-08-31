@@ -17,17 +17,18 @@ yazi() {
 alias y='yazi'
 
 # flags to always include with common commands
-alias ls='ls -haN --color=auto --hyperlink=auto --group-directories-first'
-alias grep='grep --color=auto'
+alias ls='ls -haN --color=auto --hyperlink=auto --group-directories-first' # only -a flag is POSIX
+alias grep='grep --color=auto'                                             # not POSIX
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias rm='rm -Iv'
+alias cp='cp -iv' # -v is not POSIX
+alias mv='mv -iv' # -v is not POSIX
+alias rm='rm -Iv' # -I is not POSIX but the regular -i option will drive you insane
+alias ln='ln -iv' # not POSIX
 alias mkdir='mkdir -p'
 alias tree='tree -a -I .git -I .venv -I node_modules -I target'
 alias eza='eza -agX --icons --hyperlink --group-directories-first -I .git -I .venv -I node_modules -I target'
-alias bc='bc -lq'
+alias bc='bc -lq' # -q is not POSIX
 
 # set up nohup so it can deal with an argument that is an alias name - from POSIX 'alias' page examples
 alias nohup="nohup "
