@@ -11,20 +11,34 @@ imagemagick() {
 	fi
 }
 
-# pre-lock: mute, pause notifications, pause any videos playing
-dunst_pause_level=$(dunstctl get-pause-level)
-# TODO: remove this check once on Dunst >= 1.10.0
-if [ -z "$dunst_pause_level" ]; then
-	case $(dunstctl is-paused) in
-	false)
-		dunst_pause_level='0'
-		;;
-	*)
-		dunst_pause_level='100'
-		;;
-	esac
-fi
-if [ "$dunst_pause_level" != '100' ]; then dunstctl set-paused true; fi
+get_notification_level() {
+	notification_level=$(dunstctl get-pause-level)
+	# TODO: remove this check once on Dunst >= 1.10.0
+	if [ -z "$notification_level" ]; then
+		case $(dunstctl is-paused) in
+		false)
+			notification_level='0'
+			;;
+		*)
+			notification_level='100'
+			;;
+		esac
+	fi
+}
+
+silence_notifications() {
+	if [ "$notification_level" != '100' ]; then dunstctl set-paused true; fi
+}
+
+restart_notifications() {
+	# TODO: remove set-paused fallback once able to upgrade to dunst 1.10.0
+	if [ "$notification_level" != '100' ]; then dunstctl set-pause-level "$notification_level" || dunstctl set-paused false; fi
+}
+
+# pre-lock: mute, pause any videos playing
+# wait to pause notifications until right before screen lock
+notify-send --urgency critical --expire-time 3000 "Locking screen..."
+get_notification_level
 playerctl --all-players pause
 # shellcheck disable=2046 # deliberate split
 set -- $(wpctl get-volume @DEFAULT_SINK@)
@@ -83,10 +97,11 @@ if [ -e "$wallpaper_lock_file" ]; then
 
 	lock_args="-i $OUTPUT_IMG"
 fi
+
+silence_notifications
 # shellcheck disable=2086 # deliberate split
 i3lock -n -e $lock_args
 
-# post-lock: resume notifications and unmute (don't play videos)
-# TODO: remove set-paused fallback once able to upgrade to dunst 1.10.0
-if [ "$dunst_pause_level" != '100' ]; then dunstctl set-pause-level "$dunst_pause_level" || dunstctl set-paused false; fi
+# post-lock: resume notifications (if enabled) and unmute (don't play videos)
+restart_notifications
 if [ "$muted_args" -le 2 ]; then wpctl set-mute @DEFAULT_SINK@ 0; fi
