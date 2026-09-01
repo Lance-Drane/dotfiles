@@ -1,22 +1,21 @@
 set nocompatible
 filetype plugin indent on
-"if has("syntax")
 syntax on
-"endif
-
 set noswapfile
-set nobackup
 set hidden
-
+set viminfofile=NONE
 set expandtab
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set smartindent
-
 set number
 set relativenumber
+set ignorecase
+set smartcase
+set visualbell
+set t_vb=
+set confirm
 set showmatch
 set backspace=indent,eol,start
-
-set viminfofile=NONE
+set mouse=a
