@@ -58,7 +58,7 @@ if [ -e "$wallpaper_lock_file" ]; then
 	# nuke cache if we change background image
 	CACHE_FILE="$CACHE_DIR"/"$MD5_IMG"
 	[ -e "$CACHE_FILE" ] || rm "$CACHE_DIR"/* 2>/dev/null
-	touch "$CACHE_FILE"
+	printf '' >"$CACHE_FILE"
 
 	MD5_SCREEN=$(xrandr --listactivemonitors | md5sum | cut -c 1-32)
 	OUTPUT_IMG="$CACHE_DIR"/"$MD5_IMG"."$MD5_SCREEN".png
