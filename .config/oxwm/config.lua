@@ -114,7 +114,7 @@ local blocks = {
 	block_separator(),
 	oxwm.bar.block.datetime({
 		format = "{}",
-		date_format = " %m/%d 󰥔 %I:%M %P",
+		date_format = " %m/%d 󰥔 %I:%M %p",
 		interval = 5,
 		color = colors.datetime,
 		underline = true,
@@ -264,8 +264,11 @@ oxwm.key.bind({ modkey, "Shift" }, "Z", oxwm.spawn("wm-lockscreen"))
 oxwm.key.bind({ modkey }, "Space", oxwm.spawn({ "rofi -show drun" })) -- desktop runner
 oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.spawn({ "rofi -show run" })) -- binary runner
 oxwm.key.bind({ modkey }, "grave", oxwm.spawn({ "rofi -modi emoji -show emoji -kb-custom-1 Ctrl+C" })) -- emoji picker
--- screenshots
-oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "maim -s | xclip -selection clipboard -t image/png" }))
+-- screenshots - both commands will save the image AND copy the image to clipboard
+local screenshot_handle =
+	" | tee ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png | xclip -selection clipboard -target image/png -i"
+oxwm.key.bind({}, "Print", oxwm.spawn({ "maim -i $(xdotool getactivewindow)" .. screenshot_handle }))
+oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "maim -s" .. screenshot_handle }))
 -- audio keys
 oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn({ "wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+" }))
 oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn({ "wpctl set-volume @DEFAULT_SINK@ 5%-" }))
