@@ -266,11 +266,13 @@ oxwm.key.bind({ modkey, "Shift" }, "Z", oxwm.spawn("systemctl suspend || loginct
 oxwm.key.bind({ modkey }, "Space", oxwm.spawn({ "rofi -show drun" })) -- desktop runner
 oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.spawn({ "rofi -show run" })) -- binary runner
 oxwm.key.bind({ modkey }, "grave", oxwm.spawn({ "rofi -modi emoji -show emoji -kb-custom-1 Ctrl+C" })) -- emoji picker
--- screenshots - both commands will save the image AND copy the image to clipboard
+-- screenshots - all commands will save the image AND copy the image to clipboard
+local screenshot_defs = 'LOCATION="$HOME/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; '
 local screenshot_handle =
-	" | tee ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png | xclip -selection clipboard -target image/png -i"
-oxwm.key.bind({}, "Print", oxwm.spawn({ "maim -i $(xdotool getactivewindow)" .. screenshot_handle }))
-oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "maim -s" .. screenshot_handle }))
+	' | tee "$LOCATION" | xclip -selection clipboard -target image/png -i; notify-send --urgency low --transient --expire-time 3000 --icon "$LOCATION" "Saved screenshot to $LOCATION"'
+oxwm.key.bind({}, "Print", oxwm.spawn({ screenshot_defs .. "maim -i $(xdotool getactivewindow)" .. screenshot_handle })) -- focused window
+oxwm.key.bind({ modkey }, "Print", oxwm.spawn({ screenshot_defs .. "maim" .. screenshot_handle })) -- full screen (includes all monitors)
+oxwm.key.bind({ "alt" }, "Print", oxwm.spawn({ screenshot_defs .. "maim -s" .. screenshot_handle })) -- select region
 -- audio keys
 oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn({ "wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+" }))
 oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn({ "wpctl set-volume @DEFAULT_SINK@ 5%-" }))
