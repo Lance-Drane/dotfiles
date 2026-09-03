@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # A LOT of credit to this script goes to https://github.com/ShikherVerma/i3lock-multimonitor/blob/master/lock
-# modified for my own purposes with improvements (i.e. cache cleanup), and to be POSIX because I'm pedantic
+# modified for my own purposes with improvements (i.e. cache cleanup), and to be mostly POSIX (except for the xss lock) because I'm pedantic
+
+# This script should also be run as a background script in the WM startup, like so:
+#xss-lock --transfer-sleep-lock -- wm-lockscreen &
 
 imagemagick() {
 	# TODO: wrapper for imagemagick 'convert' -> 'magick' migration, remove when ready
@@ -37,7 +40,7 @@ restart_notifications() {
 
 # pre-lock: mute, pause any videos playing
 # wait to pause notifications until right before screen lock
-notify-send --urgency critical --expire-time 3000 "Locking screen..."
+notify-send --transient --urgency critical --expire-time 3000 "Locking screen..."
 get_notification_level
 playerctl --all-players pause
 # shellcheck disable=2046 # deliberate split
@@ -97,11 +100,38 @@ if [ -e "$wallpaper_lock_file" ]; then
 
 	lock_args="-i $OUTPUT_IMG"
 fi
+lock_args="--ignore-empty-password --show-failed-attempts $lock_args"
 
 silence_notifications
-# shellcheck disable=2086 # deliberate split
-i3lock -n -e $lock_args
 
-# post-lock: resume notifications (if enabled) and unmute (don't play videos)
+### check /usr/share/doc/xss-lock/transfer-sleep-lock-i3lock.sh
+# We set a trap to kill the locker if we get killed, then start the locker and
+# wait for it to exit. The waiting is not that straightforward when the locker
+# forks, so we use this polling only if we have a sleep lock to deal with.
+if [ -e "/dev/fd/${XSS_SLEEP_LOCK_FD:--1}" ]; then
+	kill_i3lock() {
+		pkill -xu "$(id -u)" "$@" i3lock
+	}
+
+	trap kill_i3lock TERM INT QUIT
+
+	# we have to make sure the locker does not inherit a copy of the lock fd
+	# shellcheck disable=2086 #(deliberate split)
+	i3lock $lock_args {XSS_SLEEP_LOCK_FD}<&-
+
+	# now close our fd (only remaining copy) to indicate we're ready to sleep
+	exec {XSS_SLEEP_LOCK_FD}>&-
+
+	while kill_i3lock -0; do
+		sleep 0.5
+	done
+else
+	trap 'kill %%' TERM INT QUIT
+	# shellcheck disable=2086 #(deliberate split)
+	i3lock -n $lock_args &
+	wait
+fi
+
+# post-lock: resume notifications (if enabled) and unmute (don't autoplay videos)
 restart_notifications
 if [ "$muted_args" -le 2 ]; then wpctl set-mute @DEFAULT_SINK@ 0; fi
