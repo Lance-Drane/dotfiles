@@ -260,7 +260,7 @@ oxwm.key.bind({ modkey, "Shift" }, "R", oxwm.restart())
 oxwm.key.bind({ modkey }, "Return", oxwm.spawn_terminal())
 oxwm.key.bind({ modkey, "Shift" }, "Return", oxwm.spawn({ browser }))
 -- session lock / suspend (remember to wrap the wm-lockscreen script in xss-lock when starting the session)
-oxwm.key.bind({ modkey }, "Z", oxwm.spawn("loginctl lock-session $XDG_SESSION_ID"))
+oxwm.key.bind({ modkey }, "Z", oxwm.spawn("loginctl lock-session"))
 oxwm.key.bind({ modkey, "Shift" }, "Z", oxwm.spawn("systemctl suspend || loginctl suspend"))
 -- application launcher
 oxwm.key.bind({ modkey }, "Space", oxwm.spawn({ "rofi -show drun" })) -- desktop runner
