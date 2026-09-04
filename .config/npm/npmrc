@@ -1,4 +1,3 @@
-; pnpm
-state-dir=$XDG_STATE_HOME/pnpm-state
-store-dir=$XDG_DATA_HOME/pnpm-store
+; in days
+min-release-age=1
 

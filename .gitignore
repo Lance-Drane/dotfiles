@@ -26,6 +26,7 @@
 !/.config/nvim/
 !/.config/oxwm/
 !/.config/picom/
+!/.config/pnpm/
 !/.config/python/
 !/.config/ripgrep/
 !/.config/rofi/
