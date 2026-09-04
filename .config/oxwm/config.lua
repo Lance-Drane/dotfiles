@@ -270,9 +270,13 @@ oxwm.key.bind({ modkey }, "grave", oxwm.spawn({ "rofi -modi emoji -show emoji -k
 local screenshot_defs = 'LOCATION="$HOME/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; '
 local screenshot_handle =
 	' | tee "$LOCATION" | xclip -selection clipboard -target image/png -i; notify-send --urgency low --transient --expire-time 3000 --icon "$LOCATION" "Saved screenshot to $LOCATION"'
-oxwm.key.bind({}, "Print", oxwm.spawn({ screenshot_defs .. "maim -i $(xdotool getactivewindow)" .. screenshot_handle })) -- focused window
-oxwm.key.bind({ modkey }, "Print", oxwm.spawn({ screenshot_defs .. "maim" .. screenshot_handle })) -- full screen (includes all monitors)
-oxwm.key.bind({ "alt" }, "Print", oxwm.spawn({ screenshot_defs .. "maim -s" .. screenshot_handle })) -- select region
+oxwm.key.bind(
+	{},
+	"Print",
+	oxwm.spawn({ screenshot_defs .. "maim -u -i $(xdotool getactivewindow)" .. screenshot_handle })
+) -- focused window
+oxwm.key.bind({ modkey }, "Print", oxwm.spawn({ screenshot_defs .. "maim -u" .. screenshot_handle })) -- full screen (includes all monitors)
+oxwm.key.bind({ "alt" }, "Print", oxwm.spawn({ screenshot_defs .. "maim -u -s" .. screenshot_handle })) -- select region
 -- audio keys
 oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn({ "wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+" }))
 oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn({ "wpctl set-volume @DEFAULT_SINK@ 5%-" }))
