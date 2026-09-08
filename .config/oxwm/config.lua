@@ -289,6 +289,8 @@ oxwm.key.bind({}, "XF86AudioPrev", oxwm.spawn({ "playerctl previous" }))
 -- brightness keys (make sure user is in the 'video' and 'input' groups)
 oxwm.key.bind({}, "XF86MonBrightnessUp", oxwm.spawn({ "brightnessctl set +10%" }))
 oxwm.key.bind({}, "XF86MonBrightnessDown", oxwm.spawn({ "brightnessctl set 10%-" }))
+-- monitor management
+oxwm.key.bind({ modkey }, "F2", oxwm.spawn({ "displayselect" }))
 
 ------------------------------------------
 
