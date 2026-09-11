@@ -52,6 +52,9 @@ symlink "${HOME}/.config/starship/starship.toml" "${HOME}/.config/starship/stars
 # yazi
 symlink "${HOME}/.config/yazi/theme.toml" "${HOME}/.config/yazi/" '.toml'
 
+# zathura
+symlink "${HOME}/.config/zathura/theme" "${HOME}/.config/zathura/themes/" ''
+
 # Neovim - lua config handles most errors, but not perfect
 printf "%s" "$theme" >"$HOME/.config/nvim/active_theme.txt"
 
