@@ -37,14 +37,16 @@ alias nohup="nohup "
 command -v fd >/dev/null && {
 	alias fd='fd --hyperlink=auto --hidden --exclude .git'
 	export FZF_DEFAULT_COMMAND='fd --hidden --exclude .git'
+	export FZF_ALT_C_COMMAND='fd --hidden --exclude .git --type d'
+	export FZF_CTRL_T_COMMAND='fd --hidden --exclude .git --type f'
 }
 
 # FZF
 export FZF_CTRL_R_OPTS="--bind 'ctrl-y:execute-silent(echo -n {2..} | xclip -selection clipboard)+abort' --color header:italic --header 'Press CTRL-Y to copy command into clipboard'"
-export FZF_ALT_C_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'eza --color=always -agT --icons --group-directories-first {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --color=always --hyperlink -agl --icons --group-directories-first {}'"
 # TODO get kitty preview working, even https://github.com/junegunn/fzf/blob/master/bin/fzf-preview.sh does not seem to work for me
 #export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'case \$(file --mime-type -b {}) in inode/directory) eza --color=always -agl --icons --group-directories-first {} ;; image/*) kitty icat --clear --transfer-mode=memory --stdin=no --place=\${FZF_PREVIEW_COLUMNS}x\${FZF_PREVIEW_LINES}@0x0 {} | sed '\$d' | sed \$'\$s/\$/\\e[m/' ;; *) bat -n --color=always {} ;; esac' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target,.venv --preview 'case \$(file --mime-type -b {}) in inode/directory) eza --color=always -agl --icons --group-directories-first {} ;; *) bat -n --color=always {} ;; esac' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+export FZF_CTRL_T_OPTS="--preview 'case \$(file --mime-type -b {}) in *) bat -n --color=always {} ;; esac' --bind 'ctrl-/:change-preview-window(down|hidden|)' --header 'CTRL-/ changes preview window position'"
 
 # less
 export LESS="-iMR --use-color"
