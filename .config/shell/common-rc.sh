@@ -79,6 +79,7 @@ export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit/config.yml,${XDG_CONFIG_HOME}/
 # kubecolor
 command -v kubecolor >/dev/null && {
 	alias kubectl='kubecolor'
+	alias oc='env KUBECTL_COMMAND=oc kubecolor'
 }
 
 # directory simplification
