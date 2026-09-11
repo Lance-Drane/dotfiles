@@ -97,7 +97,7 @@
 [urgency_low]
 	# IMPORTANT: colors have to be defined in quotation marks.
 	# Otherwise the "#" and following would be interpreted as a comment.
-	background = "#16161e"
+	background = "#16161e80"
 	foreground = "#c0caf5"
 	frame_color = "#7aa2f7"
 	timeout = 3
@@ -105,13 +105,13 @@
 	#icon = /path/to/icon
 
 [urgency_normal]
-	background = "#1a1b26"
+	background = "#1a1b2680"
 	foreground = "#c0caf5"
 	frame_color = "#93c36a"
 	timeout = 5
 
 [urgency_critical]
-	background = "#db4b4b"
+	background = "#db4b4b80"
 	foreground = "#c0caf5"
 	frame_color = "#db4b4b"
 	timeout = 10
