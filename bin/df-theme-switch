@@ -1,0 +1,78 @@
+#!/bin/sh
+
+theme="${1:-tokyonight_night}"
+msg_body=""
+
+# only symlinks if the theme file actually exists, otherwise do nothing but append to the notification message at the end
+# $1 = symlink file name
+# $2 = source prefix (full filepath, etc.)
+# $3 = source suffix, often just the file extension
+symlink() {
+	fullpath="${2}${theme}${3}"
+	if [ -e "$fullpath" ]; then
+		# NOTE: --relative is not POSIX (can probably remove if I remove symlinks from git)
+		ln -sf --relative "$fullpath" "$1"
+	else
+		msg_body="${msg_body}- ${1}\n"
+	fi
+}
+
+#####################################################################################
+
+### TODOS - rmpc, dunst (needs include files?)
+
+# batcat
+symlink "${HOME}/.config/bat/themes/active_theme.tmTheme" "${HOME}/.config/bat/themes/" '.tmTheme'
+bat cache --build &
+
+# btop
+symlink "${HOME}/.config/btop/themes/custom.theme" "${HOME}/.config/btop/themes/" '.theme'
+
+# eza
+symlink "${HOME}/.config/eza/theme.yml" "${HOME}/.config/eza/" '.yml'
+
+# git (inc. delta)
+symlink "${HOME}/.config/git/themes/theme.gitconfig" "${HOME}/.config/git/themes/" '.gitconfig'
+
+# lazygit
+symlink "${HOME}/.config/lazygit/theme.yml" "${HOME}/.config/lazygit/themes/" '.yml'
+
+# oxwm
+symlink "${HOME}/.config/oxwm/themes/theme.lua" "${HOME}/.config/oxwm/themes/" '.lua'
+
+# ripgrep
+symlink "${HOME}/.config/ripgrep/config" "${HOME}/.config/ripgrep/" ''
+
+# rofi
+symlink "${HOME}/.config/rofi/theme.rasi" "${HOME}/.config/rofi/themes/" '.rasi'
+
+# starship
+symlink "${HOME}/.config/starship/starship.toml" "${HOME}/.config/starship/starship_" '.toml'
+
+# yazi
+symlink "${HOME}/.config/yazi/theme.toml" "${HOME}/.config/yazi/" '.toml'
+
+# Neovim - lua config handles most errors, but not perfect
+printf "%s" "$theme" >"$HOME/.config/nvim/active_theme.txt"
+
+######################################################################
+
+# shell - do this after everything except terminal
+symlink "${HOME}/.config/shell/theme-rc.sh" "${HOME}/.config/shell/themes-rc/" '.sh'
+# only pkill interactive shells because only those have set SIGUSR1
+# shellcheck disable=SC2046  # deliberate split
+pkill --signal SIGUSR1 -u "$USER" -P "$(pidof "$TERMINAL" | tr ' ' ',')" zsh
+
+# Terminal - kitty
+symlink "${HOME}/.config/kitty/theme.conf" "${HOME}/.config/kitty/theme_" '.conf'
+symlink "${HOME}/.config/kitty/diff.conf" "${HOME}/.config/kitty/diff_" '.conf'
+pkill --signal SIGUSR1 -u "$USER" kitty
+
+#################################################################
+
+# Finished
+msg_head="Updated all files to theme $1"
+if [ -n "$msg_body" ]; then
+	msg_head="The following files were not updated to $1 from their previous value"
+fi
+notify-send --urgency low --transient --expire-time 3000 "$msg_head" "$msg_body"
