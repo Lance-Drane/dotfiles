@@ -7,7 +7,7 @@ theme:
   base:
     danger: "fg=#f7768e:bold"
     info: "fg=#c0caf5"
-    muted: "fg=#c0caf5:italic"
+    muted: "fg=#565f89:italic"
     primary: "fg=#bb9af7"
     secondary: "fg=#7acfff"
     success: "fg=#9ece6a:bold"
