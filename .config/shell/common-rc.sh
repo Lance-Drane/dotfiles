@@ -76,6 +76,11 @@ export MANPAGER='nvim +Man! '
 # LazyGit multiple config files
 export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit/config.yml,${XDG_CONFIG_HOME}/lazygit/theme.yml"
 
+# kubecolor
+command -v kubecolor >/dev/null && {
+	alias kubectl='kubecolor'
+}
+
 # directory simplification
 alias ..='cd ..'
 alias ...='cd ../../'
