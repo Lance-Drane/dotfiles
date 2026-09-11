@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://github.com/kubecolor/kubecolor/raw/main/config-schema.json
+
+kubectl: kubectl # path to kubectl executable
+paging: auto # whether to pipe supported subcommands to a pager ("auto" or "never")
+
+theme:
+  base:
+    danger: "fg=#f7768e:bold"
+    info: "fg=#c0caf5"
+    muted: "fg=#c0caf5:italic"
+    primary: "fg=#bb9af7"
+    secondary: "fg=#7acfff"
+    success: "fg=#9ece6a:bold"
+    warning: "fg=#e0af68:bold"
+
+  default: "fg=#9ece6a"

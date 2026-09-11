@@ -36,6 +36,8 @@ export FFMPEG_DATADIR="${XDG_CONFIG_HOME}/ffmpeg"
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 # Starship
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
+# Kubecolor
+export KUBECOLOR_CONFIG="${XDG_CONFIG_HOME}/kubecolor/config.yaml"
 # Ansible
 export ANSIBLE_HOME="${XDG_DATA_HOME}/ansible"
 # AWS

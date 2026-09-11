@@ -19,6 +19,7 @@
 !/.config/git/
 /.config/git/credentials # ignore credentials file
 !/.config/kitty/
+!/.config/kubecolor/
 !/.config/lazygit/
 !/.config/mpd/
 !/.config/mpv/

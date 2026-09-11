@@ -34,6 +34,9 @@ symlink "${HOME}/.config/eza/theme.yml" "${HOME}/.config/eza/" '.yml'
 # git (inc. delta)
 symlink "${HOME}/.config/git/themes/theme.gitconfig" "${HOME}/.config/git/themes/" '.gitconfig'
 
+# kubecolor
+symlink "${HOME}/.config/kubecolor/config.yml" "${HOME}/.config/kubecolor/themes/" '.yml'
+
 # lazygit
 symlink "${HOME}/.config/lazygit/theme.yml" "${HOME}/.config/lazygit/themes/" '.yml'
 
