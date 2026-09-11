@@ -14,7 +14,8 @@ if [ "$#" -eq 0 ]; then
 sharkdp/bat
 dandavison/delta
 sharkdp/fd
-BurntSushi/ripgrep" | xargs -n1 -P5 "$0"
+BurntSushi/ripgrep
+kubecolor/kubecolor" | xargs -n1 -P5 "$0"
 	# cannot parallelize dpkg installation
 	rc=0
 	for f in "${tmpprefix}"*; do
