@@ -74,8 +74,8 @@ pkill --signal SIGUSR1 -u "$USER" kitty
 #################################################################
 
 # Finished
-msg_head="Updated all files to theme $1"
+msg_head="Updated all files to theme $theme"
 if [ -n "$msg_body" ]; then
-	msg_head="The following files were not updated to $1 from their previous value"
+	msg_head="The following files were not updated to $theme from their previous value"
 fi
 notify-send --urgency low --transient --expire-time 3000 "$msg_head" "$msg_body"
