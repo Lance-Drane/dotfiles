@@ -2,6 +2,7 @@
 
 kubectl: kubectl # path to kubectl executable
 paging: auto # whether to pipe supported subcommands to a pager ("auto" or "never")
+objFreshThreshold: 8h
 
 theme:
   base:
