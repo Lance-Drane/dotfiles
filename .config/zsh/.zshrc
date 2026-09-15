@@ -222,6 +222,9 @@ bindkey -M vicmd '^[[3~' vi-delete-char
 bindkey -M vicmd '^e' edit-command-line
 bindkey -M visual '^[[3~' vi-delete
 
+# misc commands
+command -v kubecolor >/dev/null && compdef kubecolor=kubectl
+
 # FZF integration
 # CTRL + R - paste selected command from history into command line
 # ALT + C - cd into selected directory
