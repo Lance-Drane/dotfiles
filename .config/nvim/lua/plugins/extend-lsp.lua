@@ -28,4 +28,9 @@ return {
 			-- }
 		end,
 	},
+	{
+		-- this creates a new 'htmljinja' syntax for .html.[jinja|j2|jinja2] files
+		"geigerzaehler/tree-sitter-jinja2",
+		config = true,
+	},
 }
