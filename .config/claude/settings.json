@@ -6,12 +6,21 @@
     "baseRef": "fresh"
   },
   "enableArtifact": false,
+  "enabledPlugins": {
+    "ponytail@ponytail": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
   "extraKnownMarketplaces": {
     "ponytail": {
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
       }
+    }
+  },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
     }
   },
   "askUserQuestionTimeout": "never",
@@ -26,8 +35,5 @@
   "terminalProgressBarEnabled": true,
   "inputNeededNotifEnabled": false,
   "agentPushNotifEnabled": false,
-  "useAutoModeDuringPlan": true,
-  "enabledPlugins": {
-    "ponytail@ponytail": true
-  }
+  "useAutoModeDuringPlan": true
 }
