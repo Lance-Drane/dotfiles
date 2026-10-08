@@ -125,5 +125,9 @@ export TERMINAL="kitty" # used by xdg-open and some other programs
 # dynamic system detection (TODO - probably doesn't work on BSDs)
 [ -e /sys/class/power_supply/ ] && export IS_LAPTOP='1'
 
+# wallpapers, usually symlinks to the real files so the env variable doesn't need to be changed
+export WALLPAPER_DESKTOP="${XDG_PICTURES_DIR}/wallpapers/wallpaper.jpg"
+export WALLPAPER_LOCKSCREEN="${XDG_PICTURES_DIR}/wallpapers/wallpaper-lock.png"
+
 # private env variables we don't want to commit to version control
 [ -f "${XDG_CONFIG_HOME}/shell/session-envs.private.sh" ] && . "${XDG_CONFIG_HOME}/shell/session-envs.private.sh"

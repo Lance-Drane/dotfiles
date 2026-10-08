@@ -52,7 +52,7 @@ wpctl set-mute @DEFAULT_SINK@ 1
 # handle locking screen, generating image for each monitor
 # use cache as much as possible to avoid running imagemagick
 lock_args='-c 7dcfff' # tokyonight cyan
-wallpaper_lock_file="$HOME"/Pictures/wallpapers/wallpaper-lock.png
+wallpaper_lock_file="$WALLPAPER_LOCKSCREEN"
 if [ -e "$wallpaper_lock_file" ]; then
 	CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/i3lock-multimonitor"
 	[ -e "$CACHE_DIR" ] || mkdir -p "$CACHE_DIR"
