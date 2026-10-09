@@ -40,7 +40,6 @@ restart_notifications() {
 
 # pre-lock: mute, pause any videos playing
 # wait to pause notifications until right before screen lock
-notify-send --transient --urgency critical --expire-time 3000 "Locking screen..."
 get_notification_level
 playerctl --all-players pause
 # shellcheck disable=2046 # deliberate split
@@ -68,6 +67,7 @@ if [ -e "$wallpaper_lock_file" ]; then
 	SCREEN_SUM=$(xrandr --listactivemonitors | cksum | cut -d ' ' -f 1)
 	OUTPUT_IMG="$CACHE_DIR"/"$IMG_SUM"."$SCREEN_SUM".png
 	if [ ! -e "$OUTPUT_IMG" ]; then
+		notify-send --transient --urgency critical --expire-time 3000 "Locking screen..."
 		OUTPUT_IMG_WIDTH=0
 		OUTPUT_IMG_HEIGHT=0
 		magick_args=''
