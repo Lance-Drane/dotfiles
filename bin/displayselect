@@ -58,6 +58,7 @@ multimon() { # Multi-monitor handler.
 }
 
 onescreen() { # If only one output available or chosen.
+	# shellcheck disable=SC2046  # deliberate word split
 	xrandr --output "$1" --auto --scale 1.0x1.0 $(echo "$allposs" | grep -v "\b$1" | awk '{print "--output", $1, "--off"}' | paste -sd ' ' -)
 }
 
@@ -85,7 +86,7 @@ screens=$(echo "$allposs" | awk '/ connected/ {print $1}')
 	}
 
 # Get user choice including multi-monitor and manual selection:
-chosen=$(printf "%s\\nmulti-monitor\\nmanual selection" "$screens" | dmenuize "Select display arangement:") &&
+chosen=$(printf "%s\\nmulti-monitor\\nmanual selection" "$screens" | dmenuize "Select display arrangement:") &&
 	case "$chosen" in
 	"manual selection")
 		arandr
