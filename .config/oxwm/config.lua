@@ -24,11 +24,14 @@ local modkey = "Mod4"
 
 local terminal = os.getenv("TERMINAL") or "kitty"
 local browser = os.getenv("BROWSER") or "firefox"
+local runtime_dir = os.getenv("XDG_RUNTIME_DIR")
 
 -- surprisingly, there is no real way to check if a directory exists in the lua stdlib
 -- https://stackoverflow.com/a/40195356 is a possible solution but requires Lua >= 5.2
 -- so probably better to just globally set this env variable (since it should never change, it's fine)
 local is_laptop = os.getenv("IS_LAPTOP") ~= nil
+
+local webcam_title = "mpvwebcam"
 
 -- change theme quickly by changing symlink
 local colors = require("themes.theme")
@@ -60,6 +63,15 @@ local function block_separator()
 end
 
 local blocks = {
+	oxwm.bar.block.shell({
+		format = "{}",
+		command = "cat " .. runtime_dir .. "/recordingicon",
+		interval = 3,
+		color = colors.critical,
+		underline = false,
+		click = "record kill",
+	}),
+	block_separator(),
 	oxwm.bar.block.static({
 		text = "󰙣 ",
 		interval = 999999999,
@@ -203,7 +215,8 @@ oxwm.gaps.set_outer(5, 5)
 -- - Configure window behavior based on title or class
 
 -- Examples (uncomment to use):
-oxwm.rule.add({ instance = "gimp", floating = true })
+--oxwm.rule.add({ instance = "gimp", floating = true })
+oxwm.rule.add({ instance = webcam_title, floating = true })
 -- oxwm.rule.add({ class = "Alacritty", tag = 9, focus = true })
 -- oxwm.rule.add({ class = "firefox", title = "Library", floating = true })
 -- oxwm.rule.add({ class = "firefox", tag = 2 })
@@ -277,6 +290,22 @@ oxwm.key.bind(
 ) -- focused window
 oxwm.key.bind({ modkey }, "Print", oxwm.spawn({ screenshot_defs .. "maim -u" .. screenshot_handle })) -- full screen (includes all monitors)
 oxwm.key.bind({ "alt" }, "Print", oxwm.spawn({ screenshot_defs .. "maim -u -s" .. screenshot_handle })) -- select region
+-- recording
+oxwm.key.bind({ "ctrl" }, "Print", oxwm.spawn({ "record" }))
+-- webcam
+oxwm.key.bind(
+	{ modkey },
+	"F11",
+	oxwm.spawn({
+		"mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --title="
+			.. webcam_title
+			.. " --x11-name="
+			.. webcam_title
+			.. " --fullscreen=no --geometry=300x200 /dev/video0 &; xdotool search --sync --classname "
+			.. webcam_title
+			.. " windowmove %@ 0 30",
+	})
+)
 -- audio keys
 oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn({ "wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+" }))
 oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn({ "wpctl set-volume @DEFAULT_SINK@ 5%-" }))
