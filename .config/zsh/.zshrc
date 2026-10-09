@@ -279,6 +279,8 @@ bindkey '^]' TRAPUSR1
 
 # if we start in a directory with a .venv and we aren't already in a venv, auto-source it
 [[ -f .venv/bin/activate ]] && [[ -z "$VIRTUAL_ENV" ]] && source .venv/bin/activate
+# if we are in a Pixi project, and we didn't already activate the pixi environment, activate the shell hook
+[[ -d .pixi ]] && [[ -z "$PIXI_IN_SHELL" ]] && eval "$(pixi shell-hook)"
 
 # force script to have a 0 return code
 true
