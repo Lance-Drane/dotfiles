@@ -38,6 +38,20 @@ restart_notifications() {
 	if [ "$notification_level" != '100' ]; then dunstctl set-pause-level "$notification_level" || dunstctl set-paused false; fi
 }
 
+# only accept a plain fd number, since it gets eval'd
+case $XSS_SLEEP_LOCK_FD in
+'' | *[!0-9]*) sleep_lock_fd='' ;;
+*)
+	sleep_lock_fd=$XSS_SLEEP_LOCK_FD
+	# POSIX only guarantees fds 0-9 in redirections (dash stops there), but xss-lock can hand us 10+
+	if ! (eval "exec $sleep_lock_fd<&-") 2>/dev/null; then
+		command -v bash >/dev/null && exec bash "$0" "$@"
+		# no capable shell: lock anyway, logind stops waiting after InhibitDelayMaxSec
+		sleep_lock_fd=''
+	fi
+	;;
+esac
+
 # pre-lock: mute, pause any videos playing
 # wait to pause notifications until right before screen lock
 get_notification_level
@@ -110,11 +124,6 @@ silence_notifications
 # We set a trap to kill the locker if we get killed, then start the locker and
 # wait for it to exit. The waiting is not that straightforward when the locker
 # forks, so we use this polling only if we have a sleep lock to deal with.
-# only accept a plain fd number, since it gets eval'd
-case $XSS_SLEEP_LOCK_FD in
-'' | *[!0-9]*) sleep_lock_fd='' ;;
-*) sleep_lock_fd=$XSS_SLEEP_LOCK_FD ;;
-esac
 if [ -n "$sleep_lock_fd" ]; then
 	uid=$(id -u)
 	kill_i3lock() {
