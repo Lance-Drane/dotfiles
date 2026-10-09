@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 # A LOT of credit to this script goes to https://github.com/ShikherVerma/i3lock-multimonitor/blob/master/lock
-# modified for my own purposes with improvements (i.e. cache cleanup), and to be mostly POSIX (except for the xss lock) because I'm pedantic
+# modified for my own purposes with improvements (i.e. cache cleanup), and to be POSIX sh if I want to use it on the BSDs
 
 # This script should also be run as a background script in the WM startup, like so:
 #xss-lock --transfer-sleep-lock -- wm-lockscreen &
@@ -56,23 +56,23 @@ wallpaper_lock_file="$WALLPAPER_LOCKSCREEN"
 if [ -e "$wallpaper_lock_file" ]; then
 	CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/i3lock-multimonitor"
 	[ -e "$CACHE_DIR" ] || mkdir -p "$CACHE_DIR"
-	MD5_IMG=$(md5sum "$wallpaper_lock_file" | cut -c 1-32)
+	IMG_SUM=$(cksum <"$wallpaper_lock_file" | cut -d ' ' -f 1)
 
 	# nuke cache if we change background image
-	CACHE_FILE="$CACHE_DIR"/"$MD5_IMG"
+	CACHE_FILE="$CACHE_DIR"/"$IMG_SUM"
 	[ -e "$CACHE_FILE" ] || {
 		rm "$CACHE_DIR"/* 2>/dev/null
 		printf '' >"$CACHE_FILE"
 	}
 
-	MD5_SCREEN=$(xrandr --listactivemonitors | md5sum | cut -c 1-32)
-	OUTPUT_IMG="$CACHE_DIR"/"$MD5_IMG"."$MD5_SCREEN".png
+	SCREEN_SUM=$(xrandr --listactivemonitors | cksum | cut -d ' ' -f 1)
+	OUTPUT_IMG="$CACHE_DIR"/"$IMG_SUM"."$SCREEN_SUM".png
 	if [ ! -e "$OUTPUT_IMG" ]; then
 		OUTPUT_IMG_WIDTH=0
 		OUTPUT_IMG_HEIGHT=0
 		magick_args=''
 		monitors=$(xrandr --listactivemonitors | awk '/[0-9]+\/[0-9]+x/ {
-	    split($3,a,"[+\/x]");
+	    split($3,a,"[+/x]");
 	    printf("%s_%s_%s_%s\n", a[1],a[3],a[5],a[6]);
 	    }')
 		for line in $monitors; do
@@ -84,7 +84,7 @@ if [ -e "$wallpaper_lock_file" ]; then
 			screen_height="$2"
 			screen_x="$3"
 			screen_y="$4"
-			CACHE_IMG="$CACHE_DIR"/"$MD5_IMG.${screen_width}x${screen_height}".png
+			CACHE_IMG="$CACHE_DIR"/"$IMG_SUM.${screen_width}x${screen_height}".png
 			if ! [ -e "$CACHE_IMG" ]; then
 				imagemagick "$wallpaper_lock_file" -resize "${screen_width}x${screen_height}^" -gravity Center -crop "${screen_width}x${screen_height}+0+0" +repage "$CACHE_IMG"
 			fi
@@ -110,27 +110,37 @@ silence_notifications
 # We set a trap to kill the locker if we get killed, then start the locker and
 # wait for it to exit. The waiting is not that straightforward when the locker
 # forks, so we use this polling only if we have a sleep lock to deal with.
-if [ -e "/dev/fd/${XSS_SLEEP_LOCK_FD:--1}" ]; then
+# only accept a plain fd number, since it gets eval'd
+case $XSS_SLEEP_LOCK_FD in
+'' | *[!0-9]*) sleep_lock_fd='' ;;
+*) sleep_lock_fd=$XSS_SLEEP_LOCK_FD ;;
+esac
+if [ -n "$sleep_lock_fd" ]; then
+	uid=$(id -u)
 	kill_i3lock() {
-		pkill -xu "$(id -u)" "$@" i3lock
+		pkill -xu "$uid" i3lock
 	}
 
 	trap kill_i3lock TERM INT QUIT
 
 	# we have to make sure the locker does not inherit a copy of the lock fd
-	# shellcheck disable=2086 #(deliberate split)
-	i3lock $lock_args {XSS_SLEEP_LOCK_FD}<&-
+	(
+		eval "exec $sleep_lock_fd<&-"
+		# shellcheck disable=2086 #(deliberate split)
+		exec i3lock $lock_args
+	)
 
 	# now close our fd (only remaining copy) to indicate we're ready to sleep
-	exec {XSS_SLEEP_LOCK_FD}>&-
+	eval "exec $sleep_lock_fd<&-"
 
-	while kill_i3lock -0; do
-		sleep 0.5
+	while pgrep -xu "$uid" i3lock >/dev/null; do
+		sleep 1
 	done
 else
-	trap 'kill %%' TERM INT QUIT
 	# shellcheck disable=2086 #(deliberate split)
 	i3lock -n $lock_args &
+	lock_pid=$!
+	trap 'kill "$lock_pid"' TERM INT QUIT
 	wait
 fi
 
