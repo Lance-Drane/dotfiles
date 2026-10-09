@@ -41,7 +41,7 @@ restart_notifications() {
 # pre-lock: mute, pause any videos playing
 # wait to pause notifications until right before screen lock
 get_notification_level
-playerctl --all-players pause
+playerctl --all-players pause 2>/dev/null
 # shellcheck disable=2046 # deliberate split
 set -- $(wpctl get-volume @DEFAULT_SINK@)
 # output will have [MUTED] appended if muted
