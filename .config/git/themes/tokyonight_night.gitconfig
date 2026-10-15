@@ -18,7 +18,7 @@
     # --git
     blame-separator-format = "┊{n:>3}┊"
     blame-separator-style = "#3b4261"
-    blame-palette = "# #1a1b26 #343746 #424450"
+    blame-palette = "#1a1b26 #343746 #424450"
     commit-style =  "#c099ff"
     commit-decoration-style = "#3b4261" box
     # -- grep
