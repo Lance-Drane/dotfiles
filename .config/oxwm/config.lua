@@ -271,55 +271,51 @@ oxwm.key.bind({ modkey, "Shift" }, "R", oxwm.restart())
 
 ------------------ APPLICATIONS ----------
 oxwm.key.bind({ modkey }, "Return", oxwm.spawn_terminal())
-oxwm.key.bind({ modkey, "Shift" }, "Return", oxwm.spawn({ browser }))
+oxwm.key.bind({ modkey, "Shift" }, "Return", oxwm.spawn(browser))
 -- session lock / suspend (remember to wrap the wm-lockscreen script in xss-lock when starting the session)
 oxwm.key.bind({ modkey }, "Z", oxwm.spawn("loginctl lock-session"))
 oxwm.key.bind({ modkey, "Shift" }, "Z", oxwm.spawn("systemctl suspend || loginctl suspend"))
 -- application launcher
-oxwm.key.bind({ modkey }, "Space", oxwm.spawn({ "rofi -show drun" })) -- desktop runner
-oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.spawn({ "rofi -show run" })) -- binary runner
-oxwm.key.bind({ modkey }, "grave", oxwm.spawn({ "rofi -modi emoji -show emoji -kb-custom-1 Ctrl+C" })) -- emoji picker
+oxwm.key.bind({ modkey }, "Space", oxwm.spawn("rofi -show drun")) -- desktop runner
+oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.spawn("rofi -show run")) -- binary runner
+oxwm.key.bind({ modkey }, "grave", oxwm.spawn("rofi -modi emoji -show emoji -kb-custom-1 Ctrl+C")) -- emoji picker
 -- screenshots - all commands will save the image AND copy the image to clipboard
 local screenshot_defs = 'LOCATION="$HOME/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; '
 local screenshot_handle =
 	' | tee "$LOCATION" | xclip -selection clipboard -target image/png -i; notify-send --urgency low --transient --expire-time 3000 --icon "$LOCATION" "Saved screenshot to $LOCATION"'
-oxwm.key.bind(
-	{},
-	"Print",
-	oxwm.spawn({ screenshot_defs .. "maim -u -i $(xdotool getactivewindow)" .. screenshot_handle })
-) -- focused window
-oxwm.key.bind({ modkey }, "Print", oxwm.spawn({ screenshot_defs .. "maim -u" .. screenshot_handle })) -- full screen (includes all monitors)
-oxwm.key.bind({ "alt" }, "Print", oxwm.spawn({ screenshot_defs .. "maim -u -s" .. screenshot_handle })) -- select region
+oxwm.key.bind({}, "Print", oxwm.spawn(screenshot_defs .. "maim -u -i $(xdotool getactivewindow)" .. screenshot_handle)) -- focused window
+oxwm.key.bind({ modkey }, "Print", oxwm.spawn(screenshot_defs .. "maim -u" .. screenshot_handle)) -- full screen (includes all monitors)
+oxwm.key.bind({ "alt" }, "Print", oxwm.spawn(screenshot_defs .. "maim -u -s" .. screenshot_handle)) -- select region
 -- recording
-oxwm.key.bind({ "ctrl" }, "Print", oxwm.spawn({ "record" }))
+oxwm.key.bind({ "ctrl" }, "Print", oxwm.spawn("record"))
 -- webcam
 oxwm.key.bind(
 	{ modkey },
 	"F11",
-	oxwm.spawn({
+	oxwm.spawn(
 		"mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --title="
 			.. webcam_title
 			.. " --x11-name="
 			.. webcam_title
 			.. " --fullscreen=no --geometry=300x200 /dev/video0 &; xdotool search --sync --classname "
 			.. webcam_title
-			.. " windowmove %@ 0 30",
-	})
+			.. " windowmove %@ 0 30"
+	)
 )
 -- audio keys
-oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn({ "wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+" }))
-oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn({ "wpctl set-volume @DEFAULT_SINK@ 5%-" }))
-oxwm.key.bind({}, "XF86AudioMute", oxwm.spawn({ "wpctl set-mute @DEFAULT_SINK@ toggle" }))
-oxwm.key.bind({}, "XF86AudioMicMute", oxwm.spawn({ "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" }))
-oxwm.key.bind({}, "XF86AudioPlay", oxwm.spawn({ "playerctl play-pause" }))
-oxwm.key.bind({}, "XF86AudioPause", oxwm.spawn({ "playerctl play-pause" }))
-oxwm.key.bind({}, "XF86AudioNext", oxwm.spawn({ "playerctl next" }))
-oxwm.key.bind({}, "XF86AudioPrev", oxwm.spawn({ "playerctl previous" }))
+oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn("wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+"))
+oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn("wpctl set-volume @DEFAULT_SINK@ 5%-"))
+oxwm.key.bind({}, "XF86AudioMute", oxwm.spawn("wpctl set-mute @DEFAULT_SINK@ toggle"))
+oxwm.key.bind({}, "XF86AudioMicMute", oxwm.spawn("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"))
+oxwm.key.bind({}, "XF86AudioPlay", oxwm.spawn("playerctl play-pause"))
+oxwm.key.bind({}, "XF86AudioPause", oxwm.spawn("playerctl play-pause"))
+oxwm.key.bind({}, "XF86AudioNext", oxwm.spawn("playerctl next"))
+oxwm.key.bind({}, "XF86AudioPrev", oxwm.spawn("playerctl previous"))
 -- brightness keys (make sure user is in the 'video' and 'input' groups)
-oxwm.key.bind({}, "XF86MonBrightnessUp", oxwm.spawn({ "brightnessctl set +10%" }))
-oxwm.key.bind({}, "XF86MonBrightnessDown", oxwm.spawn({ "brightnessctl set 10%-" }))
+oxwm.key.bind({}, "XF86MonBrightnessUp", oxwm.spawn("brightnessctl set +10%"))
+oxwm.key.bind({}, "XF86MonBrightnessDown", oxwm.spawn("brightnessctl set 10%-"))
 -- monitor management
-oxwm.key.bind({ modkey }, "F2", oxwm.spawn({ "displayselect" }))
+oxwm.key.bind({ modkey }, "F2", oxwm.spawn("displayselect"))
 
 ------------------------------------------
 
