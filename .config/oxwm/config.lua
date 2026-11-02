@@ -65,6 +65,14 @@ end
 local blocks = {
 	oxwm.bar.block.shell({
 		format = "{}",
+		command = "xdotool getactivewindow getwindowname | cut -c 1-50",
+		interval = 1,
+		color = colors.windowname,
+		underline = false,
+	}),
+	block_separator(),
+	oxwm.bar.block.shell({
+		format = "{}",
 		command = "cat " .. runtime_dir .. "/recordingicon",
 		interval = 3,
 		color = colors.critical,

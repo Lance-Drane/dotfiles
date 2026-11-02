@@ -8,6 +8,7 @@ return {
 	info = "#7dcfff",
 	focus = "#bb9af7",
 	-- block config
+	windowname = "#c0caf5",
 	music = "#c0caf5",
 	ram = "#7aa2f7",
 	cpu = "#f7768e",
