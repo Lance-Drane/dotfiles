@@ -10,6 +10,7 @@
 !/.config/claude/
 /.config/claude/*
 !/.config/claude/settings.json
+!/.config/clipcat/
 !/.config/copilot/
 /.config/copilot/*
 !/.config/copilot/settings.json

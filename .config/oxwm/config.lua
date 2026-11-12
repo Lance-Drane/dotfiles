@@ -310,6 +310,9 @@ oxwm.key.bind(
 			.. " windowmove %@ 0 30"
 	)
 )
+-- clipboard (make sure to run "clipcatd" in some autostart script)
+oxwm.key.bind({ modkey }, "P", oxwm.spawn("clipcat-menu insert"))
+oxwm.key.bind({ modkey }, "O", oxwm.spawn("clipcat-menu remove"))
 -- audio keys
 oxwm.key.bind({}, "XF86AudioRaiseVolume", oxwm.spawn("wpctl set-volume --limit 1.0 @DEFAULT_SINK@ 5%+"))
 oxwm.key.bind({}, "XF86AudioLowerVolume", oxwm.spawn("wpctl set-volume @DEFAULT_SINK@ 5%-"))

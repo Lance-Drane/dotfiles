@@ -15,6 +15,7 @@ sharkdp/bat
 dandavison/delta
 sharkdp/fd
 BurntSushi/ripgrep
+xrelkd/clipcat
 kubecolor/kubecolor" | xargs -n1 -P5 "$0"
 	# cannot parallelize dpkg installation
 	rc=0

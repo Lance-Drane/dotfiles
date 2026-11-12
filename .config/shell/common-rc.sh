@@ -82,6 +82,12 @@ command -v kubecolor >/dev/null && {
 	alias oc='env KUBECTL_COMMAND=oc kubecolor'
 }
 
+# clipcat
+if command -v clipcat-menu >/dev/null 2>&1; then
+	alias clipedit=' clipcat-menu --finder=fzf edit'
+	alias clipdel=' clipcat-menu --finder=fzf remove'
+fi
+
 # directory simplification
 alias ..='cd ..'
 alias ...='cd ../../'
