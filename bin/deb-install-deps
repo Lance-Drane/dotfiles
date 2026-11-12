@@ -61,6 +61,10 @@ dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r
 | select(endswith(".deb")
 and (contains("amd64") or contains("x86_64"))
 and (contains("musl") | not))')
+if [ -z "$dl_url" ]; then
+	echo "ERROR: Could not find a .deb for $repo" >&2
+	exit 1
+fi
 fname="$(basename "$dl_url")"
 tmppath="${tmpprefix}${fname}"
 
