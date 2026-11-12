@@ -16,6 +16,7 @@ dandavison/delta
 sharkdp/fd
 BurntSushi/ripgrep
 xrelkd/clipcat
+sxyazi/yazi
 kubecolor/kubecolor" | xargs -n1 -P5 "$0"
 	# cannot parallelize dpkg installation
 	rc=0
@@ -56,7 +57,10 @@ if ldd --version 2>&1 | grep -Fqi 'musl'; then
 fi
 
 repo="$1"
-dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r '[.assets.[].browser_download_url][] | select(endswith("amd64.deb") and (contains("musl") | not))')
+dl_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r '[.assets.[].browser_download_url][]
+| select(endswith(".deb")
+and (contains("amd64") or contains("x86_64"))
+and (contains("musl") | not))')
 fname="$(basename "$dl_url")"
 tmppath="${tmpprefix}${fname}"
 

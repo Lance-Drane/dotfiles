@@ -11,8 +11,4 @@ if [ "$(id -u)" = '0' ]; then
 fi
 
 # make sure Yazi plugins are installed
-if command -v yazi.ya >/dev/null; then
-	yazi.ya pkg install
-else
-	ya pkg install
-fi
+ya pkg install
