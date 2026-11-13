@@ -25,7 +25,6 @@ killrecording() {
 	kill -15 "$recpid"
 	rm -f "$pidfile"
 	updateicon ""
-	#pkill -RTMIN+9 "${STATUSBAR:-dwmblocks}"
 }
 
 screencast() {
