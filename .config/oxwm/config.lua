@@ -287,6 +287,13 @@ oxwm.key.bind({ modkey, "Shift" }, "Z", oxwm.spawn("systemctl suspend || loginct
 oxwm.key.bind({ modkey }, "Space", oxwm.spawn("rofi -show drun")) -- desktop runner
 oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.spawn("rofi -show run")) -- binary runner
 oxwm.key.bind({ modkey }, "grave", oxwm.spawn("rofi -modi emoji -show emoji -kb-custom-1 Ctrl+C")) -- emoji picker
+oxwm.key.bind(
+	{ modkey, "Shift" },
+	"grave",
+	oxwm.spawn(
+		'rofi -dmenu -p "Nerd Font" <  "${XDG_DATA_HOME:-$HOME/.local/share}/dotfiles/nerd-fonts.txt" | awk \'{printf "%s", $1}\' | xclip -selection clipboard'
+	)
+) -- nerd font picker
 -- screenshots - all commands will save the image AND copy the image to clipboard
 local screenshot_defs = 'LOCATION="$HOME/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; '
 local screenshot_handle =
