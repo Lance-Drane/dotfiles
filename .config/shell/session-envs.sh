@@ -123,12 +123,9 @@ export TERMINAL="kitty" # used by xdg-open and some other programs
 #export MAILAPP="$BROWSER" # used by my personal xdg-open script
 
 # dynamic system detection (TODO - probably doesn't work on BSDs)
-for f in /sys/class/power_supply/BAT*; do
-	if [ -e "$f" ]; then
-		export IS_LAPTOP='1'
-		break
-	fi
-done
+if [ -e "/sys/class/power_supply/BAT0" ]; then
+	export IS_LAPTOP='1'
+fi
 
 # wallpapers, usually symlinks to the real files so the env variable doesn't need to be changed
 export WALLPAPER_DESKTOP="${XDG_PICTURES_DIR}/wallpapers/wallpaper.jpg"
