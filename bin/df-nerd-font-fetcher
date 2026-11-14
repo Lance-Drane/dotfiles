@@ -5,15 +5,22 @@ set -eu
 
 out=${1:-${XDG_DATA_HOME:-$HOME/.local/share}/dotfiles/nerd-fonts.txt}
 tmp=$(mktemp) && trap 'rm -f "$tmp"' EXIT
-# The page embeds `const glyphs = { "nf-x": "hex", ..., }`; strip the trailing comma, then jq it.
-# Also note that any font names which start with "nfold" are legacy fonts, and should not be included (https://github.com/ryanoasis/nerd-fonts/issues/365)
+# The page embeds `const glyphs = { "nf-x": "hex", ..., }`
+# Also note that any font names which start with "nfold-" (not "nf-") are legacy fonts, and should not be included (https://github.com/ryanoasis/nerd-fonts/issues/365)
 curl -fsSL https://www.nerdfonts.com/cheat-sheet |
-	sed -n '/^const glyphs = {/,/^}/p' | sed '1s/.*/{/' | tr -d '\n' | sed 's/,}$/}/' |
-	jq -r 'to_entries[]
-          | select(.key | startswith("nfold") | not)
-          | " \(.value | ascii_downcase | explode
-          | reduce .[] as $c (0; .*16 + (if $c >= 97 then $c-87 else $c-48 end))
-          | [.] | implode)  \(.key)"' >"$tmp"
+	sed -n '/^const glyphs = {/,/^}/p' | awk -F '"' '
+function parsehex(V,OUT)
+{
+    for(N=1; N<=length(V); N++)
+        OUT=(OUT*16) + H[substr(V, N, 1)]
+
+    return(OUT)
+}
+
+BEGIN { for(N=0; N<16; N++)
+        {  H[sprintf("%x",N)]=N; H[sprintf("%X",N)]=N } }
+
+$2 ~ /^nf-/ { printf " %c  %s\n", parsehex($4), $2 }' >"$tmp"
 [ -s "$tmp" ] || {
 	echo "no glyphs parsed; page format changed?" >&2
 	exit 1
