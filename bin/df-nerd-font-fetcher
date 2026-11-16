@@ -8,19 +8,22 @@ tmp=$(mktemp) && trap 'rm -f "$tmp"' EXIT
 # The page embeds `const glyphs = { "nf-x": "hex", ..., }`
 # Also note that any font names which start with "nfold-" (not "nf-") are legacy fonts, and should not be included (https://github.com/ryanoasis/nerd-fonts/issues/365)
 curl -fsSL https://www.nerdfonts.com/cheat-sheet |
-	sed -n '/^const glyphs = {/,/^}/p' | awk -F '"' '
-function parsehex(V,OUT)
-{
-    for(N=1; N<=length(V); N++)
-        OUT=(OUT*16) + H[substr(V, N, 1)]
-
-    return(OUT)
+	sed -n '/^const glyphs = {/,/^}/p' | LC_ALL=C awk -F '"' '
+# printf "%c" with a value > 255 is unspecified by POSIX (gawk emits UTF-8, mawk the low byte),
+# so encode UTF-8 by hand and print single bytes; LC_ALL=C stops gawk re-encoding bytes 128-255.
+function parsehex(v, n, out) {
+    for (n = 1; n <= length(v); n++)
+        out = out * 16 + H[substr(v, n, 1)]
+    return out
 }
-
-BEGIN { for(N=0; N<16; N++)
-        {  H[sprintf("%x",N)]=N; H[sprintf("%X",N)]=N } }
-
-$2 ~ /^nf-/ { printf " %c  %s\n", parsehex($4), $2 }' >"$tmp"
+function utf8(c) {
+    if (c < 128)   return sprintf("%c", c)
+    if (c < 2048)  return sprintf("%c%c", 192 + int(c/64), 128 + c%64)
+    if (c < 65536) return sprintf("%c%c%c", 224 + int(c/4096), 128 + int(c/64)%64, 128 + c%64)
+    return sprintf("%c%c%c%c", 240 + int(c/262144), 128 + int(c/4096)%64, 128 + int(c/64)%64, 128 + c%64)
+}
+BEGIN { for (n = 0; n < 16; n++) { H[sprintf("%x", n)] = n; H[sprintf("%X", n)] = n } }
+$2 ~ /^nf-/ { printf " %s  %s\n", utf8(parsehex($4)), $2 }' >"$tmp"
 [ -s "$tmp" ] || {
 	echo "no glyphs parsed; page format changed?" >&2
 	exit 1
