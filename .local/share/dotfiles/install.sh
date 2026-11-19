@@ -8,7 +8,7 @@ DOTFILES_GIT_DIR="${DOTFILES_GIT_DIR:-$HOME/.dotfiles-git}"
 DOTFILES_BACKUP_DIR="${DOTFILES_BACKUP_DIR:-$HOME/.dotfiles-backup}"
 
 # script, don't change
-git clone --bare "$REPO" "$DOTFILES_GIT_DIR"
+git clone --bare "$DOTFILES_REPO" "$DOTFILES_GIT_DIR"
 dotfiles() {
 	git --git-dir "$DOTFILES_GIT_DIR" --work-tree "$HOME" "$@"
 }
