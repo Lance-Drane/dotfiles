@@ -24,7 +24,7 @@
     }
   },
   "askUserQuestionTimeout": "never",
-  "theme": "dark",
+  "theme": "auto",
   "editorMode": "vim",
   "verbose": false,
   "preferredNotifChannel": "auto",
