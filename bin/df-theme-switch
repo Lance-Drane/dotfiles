@@ -61,6 +61,12 @@ symlink "${HOME}/.config/zathura/theme" "${HOME}/.config/zathura/themes/" ''
 # Neovim - lua config handles most errors, but not perfect
 printf "%s" "$theme" >"$HOME/.config/nvim/active_theme.txt"
 
+# OXWM - send the reload key to x11
+symlink "${HOME}/.config/oxwm/themes/theme.lua" "$HOME/.config/oxwm/themes/" '.lua'
+{
+	pidof -sq oxwm &
+} && xdotool key super+shift+r
+
 ######################################################################
 
 # shell - do this after everything except terminal
