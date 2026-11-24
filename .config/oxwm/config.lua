@@ -290,9 +290,7 @@ oxwm.key.bind({ modkey }, "grave", oxwm.spawn("rofi -modi emoji -show emoji -kb-
 oxwm.key.bind(
 	{ modkey, "Shift" },
 	"grave",
-	oxwm.spawn(
-		'rofi -dmenu -p "Nerd Font" <  "${XDG_DATA_HOME:-$HOME/.local/share}/dotfiles/nerd-fonts.txt" | awk \'{printf "%s", $1}\' | xclip -selection clipboard'
-	)
+	oxwm.spawn('dmenu-character-selector "${XDG_DATA_HOME:-$HOME/.local/share}/dotfiles/nerd-fonts.txt" "Nerd Font"')
 ) -- nerd font picker
 -- screenshots - all commands will save the image AND copy the image to clipboard
 local screenshot_defs = 'LOCATION="$HOME/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; '

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# usage: dmenu-character-selector <character file> <prompt>
+# <character file> should consist of the character you select, then whitespace, then any desired search terms
+set -eu
+
+[ -e "$1" ] || {
+	notify-send --urgency low --transient "File $1 does not exist"
+	exit 1
+}
+character=$(rofi -dmenu -p "${2:-Select a character}" <"$1" | awk '{printf "%s", $1}')
+[ -n "$character" ] || exit
+
+printf '%s' "$character" | xclip -selection clipboard
+notify-send --urgency low --transient --expire-time 2000 "Copied $character to clipboard"
